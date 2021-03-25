@@ -147,6 +147,12 @@ viewContent model =
             (text "Welcome!")
         , textColumn
             [ centerX
+            , Font.family [
+                Font.external
+                { name = "Source Code Pro"
+                , url = "https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap"
+                }
+            ]
             , Font.size small
             , Font.center
             , width <| px (xLarge * 4)

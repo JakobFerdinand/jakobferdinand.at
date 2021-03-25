@@ -1,4 +1,4 @@
-# if uglyfyjs is missing run:
+# if uglifyjs is missing run:
 # npm install --global uglify-js
 # https://github.com/mishoo/UglifyJS2
 
