@@ -3,7 +3,7 @@
 # https://github.com/mishoo/UglifyJS2
 
 js="elm.js"
-min="../elm-min.js"
+min="../../dist/elm-min.js"
 
 elm make --optimize --output=$js src/Main.elm
 
