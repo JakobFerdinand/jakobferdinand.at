@@ -17,6 +17,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     elm@${ELM_VERSION} \
     elm-test@${ELM_TEST_VERSION} \
     elm-format@${ELM_FORMAT_VERSION} \
+    elm-live@latest \
     uglify-js@latest \
     #
     # [Optional] Update UID/GID if needed
