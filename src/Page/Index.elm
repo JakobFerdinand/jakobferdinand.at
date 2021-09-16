@@ -107,15 +107,9 @@ viewContent =
             (text "Welcome!")
         , textColumn
             [ centerX
-            , Font.family
-                [ Font.external
-                    { name = "Source Code Pro"
-                    , url = "https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap"
-                    }
-                ]
             , Font.size 16
             , Font.center
-            , width <| px (128 * 4)
+            , width fill
             ]
             [ paragraph [] [ text "Hello, my name is Jakob Ferdinand Wegenschimmel." ]
             , paragraph [] [ text "I´m a software developer living in Austria." ]
@@ -123,8 +117,6 @@ viewContent =
             , paragraph [] [ text "Some time ago I discoverd the ELM programming language and immedeately felt in love with it." ]
             , paragraph [] [ text "So I decided to build my own homepage in elm. I´m excited where that will take me." ]
             ]
-        , newTabLink [ centerX ] { url = "https://github.com/JakobFerdinand", label = text "My Github page." }
-        , newTabLink [ centerX ] { url = "https://elm-lang.org/", label = text "A link to Elm language." }
         ]
 
 
@@ -133,12 +125,13 @@ viewFooter =
     column
         [ alignBottom
         , width fill
-        , spacing 4
+        , spacing 16
+        , padding 16
         ]
         [ row
             [ width fill
             ]
-            [ text "Footer"
-            , el [ centerX ] (text "One is never alone with a rubber duck. - Douglas Adams")
+            [ 
+            el [ centerX ] (text "One is never alone with a rubber duck. - Douglas Adams")
             ]
         ]
