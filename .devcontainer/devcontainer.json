@@ -39,4 +39,6 @@
 	"mounts": [
 		"source=vscode-devcontainer-elm-dependency-cache,target=/home/node/.elm,type=volume"
 	],
+	
+	"appPort": 1234
 }
