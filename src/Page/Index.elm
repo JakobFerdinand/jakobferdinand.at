@@ -109,7 +109,7 @@ viewContent =
             [ centerX
             , Font.size 16
             , Font.center
-            , width <| px (128 * 4)
+            , width fill
             ]
             [ paragraph [] [ text "Hello, my name is Jakob Ferdinand Wegenschimmel." ]
             , paragraph [] [ text "I´m a software developer living in Austria." ]
@@ -125,12 +125,13 @@ viewFooter =
     column
         [ alignBottom
         , width fill
-        , spacing 4
+        , spacing 16
+        , padding 16
         ]
         [ row
             [ width fill
             ]
-            [ text "Footer"
-            , el [ centerX ] (text "One is never alone with a rubber duck. - Douglas Adams")
+            [ 
+            el [ centerX ] (text "One is never alone with a rubber duck. - Douglas Adams")
             ]
         ]
