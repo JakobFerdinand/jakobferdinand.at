@@ -2,6 +2,9 @@ module Page.Index exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
 import Element exposing (..)
+import Element.Border as Border
+import Element.Font as Font
+import Element.Region as Region
 import Head
 import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -69,5 +72,72 @@ view :
 view maybeUrl sharedModel static =
     { title = "Jakob Ferdinand Wegenschimmel"
     , body =
-        [ el [ centerX, centerY ] <| text "Welcome to my homepage!" ]
+        [ column [ height fill, width fill ]
+            [ viewContent
+            , viewFooter
+            ]
+        ]
     }
+
+
+viewContent : Element Msg
+viewContent =
+    column
+        [ Region.mainContent
+        , centerX
+        , centerY
+        , spacing 16
+        , paddingXY 0 16
+        ]
+        [ image
+            [ centerX
+            , width <| px (128 * 3)
+            , height <| px (128 * 3)
+            , Border.rounded (128 * 3)
+            , Element.clip
+            ]
+            { src = "https://avatars1.githubusercontent.com/u/16666458?s=460&v=4"
+            , description = "Me hanging down the 'Himmelsleiter' on the Donnerkogel ferrata."
+            }
+        , el
+            [ centerX
+            , Font.size 24
+            , Font.color <| rgb255 137 176 174
+            ]
+            (text "Welcome!")
+        , textColumn
+            [ centerX
+            , Font.family
+                [ Font.external
+                    { name = "Source Code Pro"
+                    , url = "https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap"
+                    }
+                ]
+            , Font.size 16
+            , Font.center
+            , width <| px (128 * 4)
+            ]
+            [ paragraph [] [ text "I´m a software developer living in Austria." ]
+            , paragraph [] [ text "In my day to day job I mostly use C# in .Net Client Applications." ]
+            , paragraph [] [ text "Some time ago I discoverd the ELM programming language and immedeately felt in love with it." ]
+            , paragraph [] [ text "So I decided to build my own homepage in elm. I´m excited where that will take me." ]
+            ]
+        , newTabLink [ centerX ] { url = "https://github.com/JakobFerdinand", label = text "My Github page." }
+        , newTabLink [ centerX ] { url = "https://elm-lang.org/", label = text "A link to Elm language." }
+        ]
+
+
+viewFooter : Element Msg
+viewFooter =
+    column
+        [ alignBottom
+        , width fill
+        , spacing 4
+        ]
+        [ row
+            [ width fill
+            ]
+            [ text "Footer"
+            , el [ centerX ] (text "One is never alone with a rubber duck. - Douglas Adams")
+            ]
+        ]
