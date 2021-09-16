@@ -117,7 +117,8 @@ viewContent =
             , Font.center
             , width <| px (128 * 4)
             ]
-            [ paragraph [] [ text "I´m a software developer living in Austria." ]
+            [ paragraph [] [ text "Hello, my name is Jakob Ferdinand Wegenschimmel." ]
+            , paragraph [] [ text "I´m a software developer living in Austria." ]
             , paragraph [] [ text "In my day to day job I mostly use C# in .Net Client Applications." ]
             , paragraph [] [ text "Some time ago I discoverd the ELM programming language and immedeately felt in love with it." ]
             , paragraph [] [ text "So I decided to build my own homepage in elm. I´m excited where that will take me." ]
