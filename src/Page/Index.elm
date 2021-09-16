@@ -1,9 +1,10 @@
 module Page.Index exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
+import Element exposing (..)
 import Head
 import Head.Seo as Seo
-import Page exposing (Page, StaticPayload)
+import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Shared
@@ -31,6 +32,10 @@ page =
         |> Page.buildNoState { view = view }
 
 
+type alias Data =
+    ()
+
+
 data : DataSource Data
 data =
     DataSource.succeed ()
@@ -56,14 +61,13 @@ head static =
         |> Seo.website
 
 
-type alias Data =
-    ()
-
-
 view :
     Maybe PageUrl
     -> Shared.Model
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    View.placeholder "Index"
+    { title = "Jakob Ferdinand Wegenschimmel"
+    , body =
+        [ el [ centerX, centerY ] <| text "Welcome to my homepage!" ]
+    }
