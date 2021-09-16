@@ -2,7 +2,9 @@ module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
 import Browser.Navigation
 import DataSource
-import Element
+import Element exposing (..)
+import Element.Font as Font
+import Element.Region as Region
 import Html exposing (Html)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
@@ -97,7 +99,29 @@ view :
     -> { body : Html msg, title : String }
 view sharedData page model toMsg pageView =
     { body =
-        Element.layout [ Element.width Element.fill, Element.height Element.fill ] <|
-            Element.column [ Element.width Element.fill, Element.height Element.fill ] pageView.body
+        layout
+            [ width fill
+            , height fill
+            , Font.family
+                [ Font.external
+                    { name = "Source Code Pro"
+                    , url = "https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap"
+                    }
+                ]
+            ]
+        <|
+            column [ width fill, height fill ]
+                [ header
+                , column [ width fill, height fill ] pageView.body
+                ]
     , title = pageView.title
     }
+
+
+header : Element msg
+header =
+    row
+        [ width fill, alignTop, padding 16, spacing 16 ]
+        [ newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
+        , newTabLink [ alignRight ] { url = "https://elm-lang.org/", label = text "Elm" }
+        ]
