@@ -40,5 +40,8 @@
 		"source=vscode-devcontainer-elm-dependency-cache,target=/home/node/.elm,type=volume"
 	],
 	
-	"appPort": 1234
+	"appPort": [
+		1234,
+		3333
+	]
 }
