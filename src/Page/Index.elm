@@ -131,7 +131,7 @@ viewFooter =
         [ row
             [ width fill
             ]
-            [ 
-            el [ centerX ] (text "One is never alone with a rubber duck. - Douglas Adams")
+            [ el [ centerX ] <| text "One is never alone with a rubber duck. - Douglas Adams"
+            , newTabLink [ Font.size 12, alignRight ] { url = "https://elm-pages.com/", label = text "powered by el-pages" }
             ]
         ]
