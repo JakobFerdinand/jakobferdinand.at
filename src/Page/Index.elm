@@ -74,7 +74,6 @@ view maybeUrl sharedModel static =
     , body =
         [ column [ height fill, width fill ]
             [ viewContent
-            , viewFooter
             ]
         ]
     }
@@ -116,22 +115,5 @@ viewContent =
             , paragraph [] [ text "In my day to day job I mostly use C# in .Net Client Applications." ]
             , paragraph [] [ text "Some time ago I discoverd the ELM programming language and immedeately felt in love with it." ]
             , paragraph [] [ text "So I decided to build my own homepage in elm. I´m excited where that will take me." ]
-            ]
-        ]
-
-
-viewFooter : Element Msg
-viewFooter =
-    column
-        [ alignBottom
-        , width fill
-        , spacing 16
-        , padding 16
-        ]
-        [ row
-            [ width fill
-            ]
-            [ 
-            el [ centerX ] (text "One is never alone with a rubber duck. - Douglas Adams")
             ]
         ]
