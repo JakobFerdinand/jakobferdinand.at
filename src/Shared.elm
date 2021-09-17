@@ -1,11 +1,13 @@
 module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
+import Browser.Events exposing (onResize)
 import Browser.Navigation
 import DataSource
 import Element exposing (..)
 import Element.Font as Font
+import Element.Input as Input
 import Element.Region as Region
-import Html exposing (Html)
+import Html exposing (Html, menu)
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Path exposing (Path)
@@ -32,6 +34,7 @@ type Msg
         , fragment : Maybe String
         }
     | SharedMsg SharedMsg
+    | BrowserResized Int Int
 
 
 type alias Data =
@@ -42,8 +45,13 @@ type SharedMsg
     = NoOp
 
 
+type MenuMode
+    = Desktop
+    | Mobile Bool
+
+
 type alias Model =
-    { showMobileMenu : Bool
+    { menuMode : MenuMode
     }
 
 
@@ -62,7 +70,7 @@ init :
             }
     -> ( Model, Cmd Msg )
 init navigationKey flags maybePagePath =
-    ( { showMobileMenu = False }
+    ( { menuMode = Desktop }
     , Cmd.none
     )
 
@@ -71,15 +79,23 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnPageChange _ ->
-            ( { model | showMobileMenu = False }, Cmd.none )
+            ( model, Cmd.none )
 
         SharedMsg globalMsg ->
             ( model, Cmd.none )
 
+        BrowserResized height width ->
+            case classifyDevice { height = height, width = width } |> .class of
+                Phone ->
+                    ( { model | menuMode = Mobile False }, Cmd.none )
+
+                _ ->
+                    ( { model | menuMode = Desktop }, Cmd.none )
+
 
 subscriptions : Path -> Model -> Sub Msg
 subscriptions _ _ =
-    Sub.none
+    onResize BrowserResized
 
 
 data : DataSource.DataSource Data
@@ -111,17 +127,33 @@ view sharedData page model toMsg pageView =
             ]
         <|
             column [ width fill, height fill ]
-                [ header
+                [ header model.menuMode
                 , column [ width fill, height fill ] pageView.body
                 ]
     , title = pageView.title
     }
 
 
-header : Element msg
-header =
-    row
-        [ width fill, alignTop, padding 16, spacing 16 ]
-        [ newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
-        , newTabLink [ alignRight ] { url = "https://elm-lang.org/", label = text "Elm" }
-        ]
+header : MenuMode -> Element msg
+header menuMode =
+    case menuMode of
+        Desktop ->
+            row
+                [ Region.navigation
+                , width fill
+                , alignTop
+                , padding 16
+                , spacing 16
+                ]
+                [ newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
+                , newTabLink [ alignRight ] { url = "https://elm-lang.org/", label = text "Elm" }
+                ]
+
+        Mobile isOpen ->
+            column
+                [ Region.navigation
+                , alignLeft
+                , padding 16
+                , spacing 16
+                ]
+                [ text "🍔" ]
