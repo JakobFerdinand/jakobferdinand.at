@@ -113,6 +113,7 @@ view sharedData page model toMsg pageView =
             column [ width fill, height fill ]
                 [ header
                 , column [ width fill, height fill ] pageView.body
+                , footer
                 ]
     , title = pageView.title
     }
@@ -124,4 +125,20 @@ header =
         [ width fill, alignTop, padding 16, spacing 16 ]
         [ newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
         , newTabLink [ alignRight ] { url = "https://elm-lang.org/", label = text "Elm" }
+        ]
+
+
+footer : Element msg
+footer =
+    column
+        [ alignBottom
+        , width fill
+        , spacing 16
+        , padding 16
+        ]
+        [ row
+            [ width fill
+            ]
+            [ newTabLink [ Font.size 12, alignRight ] { url = "https://elm-pages.com/", label = text "powered by el-pages" }
+            ]
         ]
