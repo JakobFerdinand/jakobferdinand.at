@@ -122,7 +122,12 @@ view sharedData page model toMsg pageView =
 header : Element msg
 header =
     row
-        [ width fill, alignTop, padding 16, spacing 16 ]
+        [ Region.navigation
+        , width fill
+        , alignTop
+        , padding 16
+        , spacing 16
+        ]
         [ newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
         , newTabLink [ alignRight ] { url = "https://elm-lang.org/", label = text "Elm" }
         ]
@@ -131,7 +136,8 @@ header =
 footer : Element msg
 footer =
     column
-        [ alignBottom
+        [ Region.footer
+        , alignBottom
         , width fill
         , spacing 16
         , padding 16

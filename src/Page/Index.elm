@@ -50,16 +50,16 @@ head :
 head static =
     Seo.summary
         { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
+        , siteName = "Jakob Ferdinand Wegenschimmel"
         , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "elm-pages logo"
+            { url = Pages.Url.external "https://jakobferdinand.at"
+            , alt = "Jakob Ferdinand Wegenschimmel"
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "TODO"
+        , description = "The personal homepage of Jakob Ferdinand Wegenschimmel"
         , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
+        , title = "Jakob Ferdinand" -- metadata.title -- TODO
         }
         |> Seo.website
 
