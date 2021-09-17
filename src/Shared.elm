@@ -139,6 +139,6 @@ footer =
         [ row
             [ width fill
             ]
-            [ newTabLink [ Font.size 12, alignRight ] { url = "https://elm-pages.com/", label = text "powered by el-pages" }
+            [ newTabLink [ Font.size 12, alignRight ] { url = "https://elm-pages.com/", label = text "powered by elm-pages" }
             ]
         ]
