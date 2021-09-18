@@ -39,6 +39,7 @@ page =
 type alias Post =
     { title : String
     , image : String
+    , slug : String
     }
 
 
@@ -49,12 +50,13 @@ type alias Data =
 data : DataSource Data
 data =
     DataSource.Http.get
-        (Secrets.succeed "https://6mpzd5sq.api.sanity.io/v1/data/query/production?query=*%5B_type%20%3D%3D%20%22post%22%5D%0A%7Btitle%2C%20%22imageUrl%22%3A%20mainImage.asset-%3Eurl%7D")
+        (Secrets.succeed "https://6mpzd5sq.api.sanity.io/v1/data/query/production?query=*%5B_type%20%3D%3D%20%22post%22%5D%0A%7B%0A%20%20title%2C%20%0A%09%22imageUrl%22%3A%20mainImage.asset-%3Eurl%2C%0A%20%20%22slug%22%3A%20slug.current%0A%7D")
         (Decode.field "result"
             (Decode.list
-                (Decode.map2 Post
+                (Decode.map3 Post
                     (Decode.field "title" Decode.string)
                     (Decode.field "imageUrl" Decode.string)
+                    (Decode.field "slug" Decode.string)
                 )
             )
         )
@@ -94,19 +96,24 @@ view maybeUrl sharedModel static =
             , spacing 20
             , padding 30
             ]
-            [ el [ alignTop ] <| text "Yeah! That´s my freaking blog! :D"
+            [ el [ alignTop ] <| text "Blog"
+            , paragraph [ alignTop ] [ text "Most of the stuff are not real blog post. They are links and remindes of projects I found in the internet and I think are worth mentioning." ]
             , column [ centerX, centerY, spacing 20 ]
                 (static.data
                     |> List.map
                         (\post ->
-                            column [ spacing 8 ]
-                                [ image
-                                    []
-                                    { src = post.image ++ "?h=200"
-                                    , description = post.title
-                                    }
-                                , text post.title
-                                ]
+                            link []
+                                { url = "/blog/" ++ post.slug
+                                , label =
+                                    column [ spacing 8 ]
+                                        [ image
+                                            []
+                                            { src = post.image ++ "?h=200"
+                                            , description = post.title
+                                            }
+                                        , text post.title
+                                        ]
+                                }
                         )
                 )
             ]
