@@ -1,0 +1,33 @@
+{
+  "name": "jakobferdinandwebsite",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "package.json",
+  "author": "Jakob Ferdinand Wegenschimmel <j.wegenschimmel@gmail.com>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "sanity start",
+    "build": "sanity build"
+  },
+  "keywords": [
+    "sanity"
+  ],
+  "dependencies": {
+    "@sanity/base": "^2.19.4",
+    "@sanity/core": "^2.19.2",
+    "@sanity/default-layout": "^2.19.4",
+    "@sanity/default-login": "^2.19.0",
+    "@sanity/desk-tool": "^2.19.4",
+    "@sanity/vision": "^2.19.0",
+    "prop-types": "^15.7",
+    "react": "^17.0",
+    "react-dom": "^17.0",
+    "styled-components": "^5.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:JakobFerdinand/jakobferdinand.github.io.git"
+  }
+}
