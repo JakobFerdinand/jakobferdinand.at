@@ -49,7 +49,7 @@ type alias Data =
 data : DataSource Data
 data =
     DataSource.Http.get
-        (Secrets.succeed "https://eqyp5ug6.api.sanity.io/v1/data/query/production?query=*%5B_type%20%3D%3D%20%22post%22%5D%0A%7Btitle%2C%20%22imageUrl%22%3A%20mainImage.asset-%3Eurl%7D")
+        (Secrets.succeed "https://6mpzd5sq.api.sanity.io/v1/data/query/production?query=*%5B_type%20%3D%3D%20%22post%22%5D%0A%7Btitle%2C%20%22imageUrl%22%3A%20mainImage.asset-%3Eurl%7D")
         (Decode.field "result"
             (Decode.list
                 (Decode.map2 Post
@@ -90,11 +90,25 @@ view maybeUrl sharedModel static =
     , body =
         [ column
             [ centerX
-            , centerY
+            , height fill
+            , spacing 20
+            , padding 30
             ]
-            [ text "Yeah! That´s my freaking blog! :D"
-            , column []
-                (static.data |> List.map (\post -> image [] { src = post.image, description = post.title }))
+            [ el [ alignTop ] <| text "Yeah! That´s my freaking blog! :D"
+            , column [ centerX, centerY, spacing 20 ]
+                (static.data
+                    |> List.map
+                        (\post ->
+                            column [ spacing 8 ]
+                                [ image
+                                    []
+                                    { src = post.image ++ "?h=200"
+                                    , description = post.title
+                                    }
+                                , text post.title
+                                ]
+                        )
+                )
             ]
         ]
     }
