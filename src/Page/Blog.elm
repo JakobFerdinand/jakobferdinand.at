@@ -1,16 +1,14 @@
 module Page.Blog exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
-import DataSource.Http
 import Element exposing (..)
 import Head
 import Head.Seo as Seo
 import Html.Attributes exposing (title)
-import OptimizedDecoder as Decode
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
-import Pages.Secrets as Secrets
 import Pages.Url
+import Post exposing (Post)
 import Shared
 import View exposing (View)
 
@@ -36,30 +34,13 @@ page =
         |> Page.buildNoState { view = view }
 
 
-type alias Post =
-    { title : String
-    , image : String
-    , slug : String
-    }
-
-
 type alias Data =
     List Post
 
 
 data : DataSource Data
 data =
-    DataSource.Http.get
-        (Secrets.succeed "https://6mpzd5sq.api.sanity.io/v1/data/query/production?query=*%5B_type%20%3D%3D%20%22post%22%5D%0A%7B%0A%20%20title%2C%20%0A%09%22imageUrl%22%3A%20mainImage.asset-%3Eurl%2C%0A%20%20%22slug%22%3A%20slug.current%0A%7D")
-        (Decode.field "result"
-            (Decode.list
-                (Decode.map3 Post
-                    (Decode.field "title" Decode.string)
-                    (Decode.field "imageUrl" Decode.string)
-                    (Decode.field "slug" Decode.string)
-                )
-            )
-        )
+    Post.allPosts
 
 
 head :
@@ -108,7 +89,7 @@ view maybeUrl sharedModel static =
                                     column [ spacing 8 ]
                                         [ image
                                             []
-                                            { src = post.image ++ "?h=200"
+                                            { src = post.imageUrl ++ "?h=200"
                                             , description = post.title
                                             }
                                         , text post.title

@@ -6,6 +6,7 @@ import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
+import Post
 import Shared
 import View exposing (View)
 
@@ -34,12 +35,13 @@ page =
 
 routes : DataSource (List RouteParams)
 routes =
-    DataSource.succeed []
+    Post.allPosts
+        |> DataSource.map (List.map (\post -> { post = post.slug }))
 
 
 data : RouteParams -> DataSource Data
 data routeParams =
-    DataSource.succeed ()
+    Post.postDetails routeParams.post
 
 
 head :
@@ -63,7 +65,7 @@ head static =
 
 
 type alias Data =
-    ()
+    Post.PostDetails
 
 
 view :
