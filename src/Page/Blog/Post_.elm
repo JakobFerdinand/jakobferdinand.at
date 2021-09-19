@@ -1,6 +1,8 @@
 module Page.Blog.Post_ exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
+import Element exposing (..)
+import Element.Font as Font
 import Head
 import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -74,4 +76,20 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel static =
-    View.placeholder "Blog/Post_"
+    { title = static.data.title
+    , body =
+        [ column
+            [ centerX
+            , spacing 20
+            , padding 30
+            , alignTop
+            ]
+            [ el [ centerX, Font.bold ] <| text static.data.title
+            , image [ centerX ] { src = static.data.imageUrl ++ "?h=200", description = static.data.title }
+            , text "TODO: parse markdown!!!"
+            , paragraph []
+                [ text static.data.description
+                ]
+            ]
+        ]
+    }
