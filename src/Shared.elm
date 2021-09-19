@@ -123,7 +123,8 @@ header : Element msg
 header =
     row
         [ width fill, alignTop, padding 16, spacing 16 ]
-        [ link [ alignRight ] { url = "/blog", label = text "Blog" }
+        [ link [ alignLeft ] { url = "/", label = el [ Font.bold, Font.size 36 ] <| text "JFW" }
+        , link [ alignRight ] { url = "/blog", label = text "Blog" }
         , newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
         ]
 
