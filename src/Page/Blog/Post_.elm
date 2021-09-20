@@ -5,6 +5,7 @@ import Element exposing (..)
 import Element.Font as Font
 import Head
 import Head.Seo as Seo
+import Markdown exposing (markdown)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
@@ -87,6 +88,12 @@ view maybeUrl sharedModel static =
             [ el [ centerX, Font.bold ] <| text static.data.title
             , image [ centerX ] { src = static.data.imageUrl ++ "?h=200", description = static.data.title }
             , text "TODO: parse markdown!!!"
+            , case markdown <| String.replace "\u{000D}" "" static.data.description of
+                Ok ( toc, renderedEls ) ->
+                    text "Markdown geht"
+
+                Err errors ->
+                    text "Markdown geht ned"
             , paragraph []
                 [ text static.data.description
                 ]
