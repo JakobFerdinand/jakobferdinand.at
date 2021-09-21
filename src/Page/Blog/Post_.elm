@@ -3,9 +3,11 @@ module Page.Blog.Post_ exposing (Data, Model, Msg, page)
 import DataSource exposing (DataSource)
 import Element exposing (..)
 import Element.Font as Font
+import Element.Region exposing (heading)
 import Head
 import Head.Seo as Seo
-import Markdown exposing (markdown)
+import Markdown exposing (TableOfContent, markdown)
+import Markdown.Block as Block
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
@@ -87,16 +89,51 @@ view maybeUrl sharedModel static =
             ]
             [ el [ centerX, Font.bold ] <| text static.data.title
             , image [ centerX ] { src = static.data.imageUrl ++ "?h=200", description = static.data.title }
-            , text "TODO: parse markdown!!!"
             , case markdown <| String.replace "\u{000D}" "" static.data.description of
                 Ok ( toc, renderedEls ) ->
-                    text "Markdown geht"
+                    column
+                        [ spacing 30
+                        , padding 10
+                        , centerX
+                        , width fill
+                        ]
+                        renderedEls
 
                 Err errors ->
-                    text "Markdown geht ned"
-            , paragraph []
-                [ text static.data.description
-                ]
+                    paragraph []
+                        [ text "I´m sorry but it looks like I published invalid markdown."
+                        , text "Feel free to contact me so I can updated and fix the problem."
+                        ]
             ]
         ]
     }
+
+
+viewToc : TableOfContent -> Element msg
+viewToc toc =
+    column
+        [ spacing 10 ]
+        (toc
+            |> List.map
+                (\headingBlock ->
+                    link
+                        [ Font.color <| rgb255 100 100 100
+                        , Font.size <|
+                            case headingBlock.level of
+                                Block.H1 ->
+                                    22
+
+                                Block.H2 ->
+                                    18
+
+                                Block.H3 ->
+                                    16
+
+                                _ ->
+                                    12
+                        ]
+                        { url = "#" ++ headingBlock.anchorId
+                        , label = text headingBlock.name
+                        }
+                )
+        )
