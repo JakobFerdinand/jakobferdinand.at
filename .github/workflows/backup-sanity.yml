@@ -1,0 +1,23 @@
+name: Backup Sanity
+on:
+  schedule:
+    # Runs at 04:00 UTC on the 1st and 17th of every month
+    - cron: "0 4 */16 * *"
+jobs:
+  backup-sanity:
+    runs-on: ubuntu-18.04
+    name: Backup dataset
+    steps:
+      - uses: actions/checkout@v2
+      - name: Export dataset
+        uses: sanity-io/github-actions-sanity@v0.2-alpha
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+        with:
+          args: dataset export production backups/backup.tar.gz
+      - name: Upload backup.tar.gz
+        uses: actions/upload-artifact@v2
+        with:
+          name: backup-tarbell
+          path: backups/backup.tar.gz
+          if-no-files-found: error
