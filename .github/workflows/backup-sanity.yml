@@ -1,0 +1,31 @@
+name: Backup Sanity
+on:
+  schedule:
+    # Runs at 04:00 UTC on the 1st and 17th of every month
+    - cron: '0 4 */16 * *'
+jobs:
+  backup-sanity:
+    runs-on: ubuntu-18.04
+    defaults:
+      run:
+        working-directory: ./sanity
+    name: Backup dataset
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install @sanity/cli
+      - name: Export dataset
+        run: |
+            SANITY_AUTH_TOKEN="${{ secrets.SANITY_READ_TOKEN }}" \
+            npx sanity dataset export \
+            production backups/backup.tar.gz
+
+      - name: Upload backup.tar.gz
+        uses: actions/upload-artifact@v2
+        with:
+            name: backup-tarball
+            path: sanity/backups/backup.tar.gz
+            # Fails the workflow if no files are found; defaults to 'warn'
+            if-no-files-found: error
