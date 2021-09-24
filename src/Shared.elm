@@ -112,8 +112,15 @@ view sharedData page model toMsg pageView =
         <|
             column [ width fill, height fill ]
                 [ header
-                , column [ width fill, height fill ] pageView.body
-                , footer
+                , column
+                    [ width fill
+                    , height fill
+                    , scrollbarY
+                    ]
+                    [ column [ width fill, height fill ]
+                        pageView.body
+                    , footer
+                    ]
                 ]
     , title = pageView.title
     }

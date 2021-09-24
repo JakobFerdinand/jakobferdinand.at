@@ -3,7 +3,6 @@ module Post exposing (Post, PostDetails, allPosts, postDetails)
 import DataSource exposing (DataSource)
 import DataSource.Http
 import OptimizedDecoder as Decode
-import OptimizedDecoder.Pipeline exposing (decode)
 import Pages.Secrets as Secrets
 
 

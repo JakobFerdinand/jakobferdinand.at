@@ -86,14 +86,14 @@ viewContent =
         , centerX
         , centerY
         , spacing 16
-        , paddingXY 0 16
+        , padding 20
         ]
         [ image
             [ centerX
-            , width <| px (128 * 3)
-            , height <| px (128 * 3)
-            , Border.rounded (128 * 3)
-            , Element.clip
+            , width <| px 350
+            , height <| px 350
+            , Border.rounded 350
+            , clip
             ]
             { src = "https://avatars1.githubusercontent.com/u/16666458?s=460&v=4"
             , description = "Me hanging down the 'Himmelsleiter' on the Donnerkogel ferrata."

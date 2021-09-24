@@ -4,7 +4,6 @@ import DataSource exposing (DataSource)
 import Element exposing (..)
 import Head
 import Head.Seo as Seo
-import Html.Attributes exposing (title)
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
