@@ -88,7 +88,12 @@ view maybeUrl sharedModel static =
             , alignTop
             ]
             [ el [ centerX, Font.bold ] <| text static.data.title
-            , el [ Font.size 12 ] <| text static.data.description
+            , case static.data.description of
+                Just description ->
+                    el [ Font.size 12 ] <| text description
+
+                Nothing ->
+                    Element.none
             , image [ centerX ] { src = static.data.imageUrl ++ "?h=200", description = static.data.title }
             , case markdown <| String.replace "\u{000D}" "" static.data.content of
                 Ok ( toc, renderedEls ) ->
