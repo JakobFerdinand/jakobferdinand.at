@@ -11,7 +11,7 @@ type alias Post =
     { title : String
     , imageUrl : String
     , slug : String
-    , description : String
+    , description : Maybe String
     }
 
 
@@ -25,7 +25,7 @@ allPosts =
                     (Decode.field "title" Decode.string)
                     (Decode.field "imageUrl" Decode.string)
                     (Decode.field "slug" Decode.string)
-                    (Decode.field "description" Decode.string)
+                    (Decode.maybe (Decode.field "description" Decode.string))
                 )
             )
         )
@@ -34,7 +34,7 @@ allPosts =
 type alias PostDetails =
     { title : String
     , imageUrl : String
-    , description : String
+    , description : Maybe String
     , content : String
     }
 
@@ -49,7 +49,7 @@ postDetails slug =
                 (Decode.map4 PostDetails
                     (Decode.field "title" Decode.string)
                     (Decode.field "imageUrl" Decode.string)
-                    (Decode.field "description" Decode.string)
+                    (Decode.maybe (Decode.field "description" Decode.string))
                     (Decode.field "content" Decode.string)
                 )
             )

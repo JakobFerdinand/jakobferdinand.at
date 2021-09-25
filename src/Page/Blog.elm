@@ -94,7 +94,12 @@ view maybeUrl sharedModel static =
                                             , description = post.title
                                             }
                                         , text post.title
-                                        , el [ Font.size 12 ] <| text post.description
+                                        , case post.description of
+                                            Just description ->
+                                                el [ Font.size 12 ] <| text description
+
+                                            Nothing ->
+                                                Element.none
                                         ]
                                 }
                         )
