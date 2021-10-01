@@ -2,6 +2,7 @@ module Page.Blog exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
 import Element exposing (..)
+import Element.Font as Font
 import Head
 import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -92,6 +93,12 @@ view maybeUrl sharedModel static =
                                             , description = post.title
                                             }
                                         , text post.title
+                                        , case post.description of
+                                            Just description ->
+                                                el [ Font.size 12 ] <| text description
+
+                                            Nothing ->
+                                                Element.none
                                         ]
                                 }
                         )

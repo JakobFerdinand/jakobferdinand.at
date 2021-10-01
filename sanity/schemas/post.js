@@ -18,6 +18,11 @@ export default {
       },
     },
     {
+      name: 'description',
+      title: 'Description',
+      type: 'string',
+    },
+    {
       name: 'mainImage',
       title: 'Main image',
       type: 'image',
@@ -37,10 +42,10 @@ export default {
       type: 'datetime',
     },
     {
-      name: 'description',
-      title: 'Description',
-      type: 'markdown',
-    },
+      name: 'content',
+      title: 'Content',
+      type: 'markdown'
+    }
   ],
 
   preview: {
