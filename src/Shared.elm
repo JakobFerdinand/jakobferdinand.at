@@ -1,11 +1,13 @@
 module Shared exposing (Data, Model, Msg(..), SharedMsg(..), template)
 
+import Browser.Events
 import Browser.Navigation
 import DataSource
 import Element exposing (..)
 import Element.Font as Font
 import Element.Region as Region
 import Html exposing (Html)
+import Json.Decode as Decode
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Path exposing (Path)
@@ -31,6 +33,7 @@ type Msg
         , query : Maybe String
         , fragment : Maybe String
         }
+    | WindowSizeChanged Device
     | SharedMsg SharedMsg
 
 
@@ -43,7 +46,7 @@ type SharedMsg
 
 
 type alias Model =
-    { showMobileMenu : Bool
+    { device : Device
     }
 
 
@@ -62,7 +65,38 @@ init :
             }
     -> ( Model, Cmd Msg )
 init navigationKey flags maybePagePath =
-    ( { showMobileMenu = False }
+    let
+        classify : Int -> Int -> Device
+        classify height width =
+            classifyDevice { height = height, width = width }
+
+        decodeFlags =
+            Decode.decodeValue
+                (Decode.map2 classify
+                    (Decode.field "height" Decode.int)
+                    (Decode.field "width" Decode.int)
+                )
+
+        getDevice : Device
+        getDevice =
+            case flags of
+                Pages.Flags.PreRenderFlags ->
+                    { class = Desktop
+                    , orientation = Portrait
+                    }
+
+                Pages.Flags.BrowserFlags value ->
+                    case decodeFlags value of
+                        Ok device ->
+                            device
+
+                        Err _ ->
+                            { class = Desktop
+                            , orientation = Portrait
+                            }
+    in
+    ( { device = getDevice
+      }
     , Cmd.none
     )
 
@@ -71,7 +105,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnPageChange _ ->
-            ( { model | showMobileMenu = False }, Cmd.none )
+            ( model, Cmd.none )
+
+        WindowSizeChanged device ->
+            ( { model | device = device }, Cmd.none )
 
         SharedMsg globalMsg ->
             ( model, Cmd.none )
@@ -79,7 +116,7 @@ update msg model =
 
 subscriptions : Path -> Model -> Sub Msg
 subscriptions _ _ =
-    Sub.none
+    Browser.Events.onResize (\w h -> WindowSizeChanged <| classifyDevice { height = h, width = w })
 
 
 data : DataSource.DataSource Data
@@ -112,8 +149,15 @@ view sharedData page model toMsg pageView =
         <|
             column [ width fill, height fill ]
                 [ header
-                , column [ width fill, height fill ] pageView.body
-                , footer
+                , column
+                    [ width fill
+                    , height fill
+                    , scrollbarY
+                    ]
+                    [ column [ width fill, height fill ]
+                        pageView.body
+                    , footer
+                    ]
                 ]
     , title = pageView.title
     }

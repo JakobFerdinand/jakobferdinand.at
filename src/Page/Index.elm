@@ -73,27 +73,37 @@ view maybeUrl sharedModel static =
     { title = "Jakob Ferdinand Wegenschimmel"
     , body =
         [ column [ height fill, width fill ]
-            [ viewContent
+            [ viewContent sharedModel
             ]
         ]
     }
 
 
-viewContent : Element Msg
-viewContent =
+viewContent : Shared.Model -> Element Msg
+viewContent sharedModel =
+    let
+        imageSize : Int
+        imageSize =
+            case sharedModel.device.class of
+                Phone ->
+                    250
+
+                _ ->
+                    400
+    in
     column
         [ Region.mainContent
         , centerX
         , centerY
         , spacing 16
-        , paddingXY 0 16
+        , padding 20
         ]
         [ image
             [ centerX
-            , width <| px (128 * 3)
-            , height <| px (128 * 3)
-            , Border.rounded (128 * 3)
-            , Element.clip
+            , width <| px imageSize
+            , height <| px imageSize
+            , Border.rounded imageSize
+            , clip
             ]
             { src = "https://avatars1.githubusercontent.com/u/16666458?s=460&v=4"
             , description = "Me hanging down the 'Himmelsleiter' on the Donnerkogel ferrata."

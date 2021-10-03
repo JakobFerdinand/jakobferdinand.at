@@ -8,7 +8,7 @@ import Element.Input as Input
 import Element.Region as Region
 import Html
 import Html.Attributes
-import Markdown.Block as Block exposing (ListItem, Task(..), headingLevelToInt)
+import Markdown.Block as Block exposing (ListItem, Task(..))
 import Markdown.Html
 import Markdown.Parser
 import Markdown.Renderer
