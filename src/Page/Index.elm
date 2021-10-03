@@ -96,7 +96,6 @@ viewContent sharedModel =
         , centerX
         , centerY
         , spacing 16
-        , padding 20
         ]
         [ image
             [ centerX

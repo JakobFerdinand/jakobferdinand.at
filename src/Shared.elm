@@ -154,7 +154,7 @@ view sharedData page model toMsg pageView =
                     , height fill
                     , scrollbarY
                     ]
-                    [ column [ width fill, height fill ]
+                    [ column [ width fill, height fill, padding 20 ]
                         pageView.body
                     , footer
                     ]
@@ -168,6 +168,7 @@ header =
     row
         [ width fill, alignTop, padding 16, spacing 16 ]
         [ link [ alignLeft ] { url = "/", label = el [ Font.bold, Font.size 36 ] <| text "JFW" }
+        , link [ alignRight ] { url = "/about-me", label = text "AboutMe" }
         , link [ alignRight ] { url = "/blog", label = text "Blog" }
         , newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
         ]
