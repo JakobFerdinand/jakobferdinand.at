@@ -2,6 +2,7 @@ module Page.Index exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
 import Element exposing (..)
+import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Region as Region
@@ -72,7 +73,7 @@ view :
 view maybeUrl sharedModel static =
     { title = "Jakob Ferdinand Wegenschimmel"
     , body =
-        [ column [ height fill, width fill ]
+        [ column [ height fill, width fill, Background.color <| rgb255 44 44 44 ]
             [ viewContent sharedModel
             ]
         ]
