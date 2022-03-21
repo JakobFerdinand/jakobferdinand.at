@@ -1,0 +1,10 @@
+version: 2
+updates:
+- package-ecosystem: elm
+  directory: "/src"
+  schedule:
+    interval: daily
+    timezone: Europe/Vienna
+  open-pull-requests-limit: 3
+  reviewers:
+  - JakobFerdinand
