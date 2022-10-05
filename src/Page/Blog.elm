@@ -79,7 +79,7 @@ view maybeUrl sharedModel static =
             ]
             [ el [ alignTop ] <| text "Blog"
             , paragraph [ alignTop ] [ text "Most of the stuff are not real blog post. They are links and remindes of projects I found in the internet and I think are worth mentioning." ]
-            , column [ centerX, centerY, spacing 20 ]
+            , column [ centerX, centerY, spacing 50 ]
                 (static.data
                     |> List.map
                         (\post ->
@@ -88,8 +88,10 @@ view maybeUrl sharedModel static =
                                 , label =
                                     column [ spacing 8 ]
                                         [ image
-                                            []
-                                            { src = post.imageUrl ++ "?h=200"
+                                            [ width (fill |> maximum 1200)
+                                            , height (fill |> maximum 200)
+                                            ]
+                                            { src = post.imageUrl
                                             , description = post.title
                                             }
                                         , text post.title
