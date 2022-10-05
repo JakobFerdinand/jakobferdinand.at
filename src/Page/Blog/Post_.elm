@@ -40,8 +40,9 @@ page =
 
 routes : DataSource (List RouteParams)
 routes =
-    Post.allPosts
-        |> DataSource.map (List.map (\post -> { post = post.slug }))
+    DataSource.succeed []
+    -- Post.allPosts
+    --     |> DataSource.map (List.map (\post -> { post = post.slug }))
 
 
 data : RouteParams -> DataSource Data
