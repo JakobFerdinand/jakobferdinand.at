@@ -1,6 +1,8 @@
 module Page.Blog exposing (Data, Model, Msg, page)
 
+import Data.Post as Post exposing (Post)
 import DataSource exposing (DataSource)
+import Date
 import Element exposing (..)
 import Element.Font as Font
 import Head
@@ -8,7 +10,6 @@ import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Post exposing (Post)
 import Shared
 import View exposing (View)
 
@@ -77,32 +78,50 @@ view maybeUrl sharedModel static =
             , spacing 20
             , padding 30
             ]
-            [ el [ alignTop ] <| text "Blog"
-            , paragraph [ alignTop ] [ text "Most of the stuff are not real blog post. They are links and remindes of projects I found in the internet and I think are worth mentioning." ]
-            , column [ centerX, centerY, spacing 20 ]
-                (static.data
-                    |> List.map
-                        (\post ->
-                            link []
-                                { url = "/blog/" ++ post.slug
-                                , label =
-                                    column [ spacing 8 ]
-                                        [ image
-                                            []
-                                            { src = post.imageUrl ++ "?h=200"
-                                            , description = post.title
-                                            }
-                                        , text post.title
-                                        , case post.description of
-                                            Just description ->
-                                                el [ Font.size 12 ] <| text description
-
-                                            Nothing ->
-                                                Element.none
-                                        ]
-                                }
-                        )
-                )
+            [ el [ alignTop, Font.bold ] <| text "Blog"
+            , paragraph [ alignTop ]
+                [ text "Just a colleciton of projects and informations." ]
+            , column [ centerX, centerY, spacing 50 ]
+                (static.data |> List.map viewBlogPost)
             ]
         ]
     }
+
+
+viewBlogPost : Post -> Element Msg
+viewBlogPost post =
+    link []
+        { url = "/blog/" ++ post.slug
+        , label =
+            column [ spacing 8 ]
+                [ image
+                    [ width (fill |> maximum 1200)
+                    , height (fill |> maximum 200)
+                    ]
+                    { src = post.imageUrl
+                    , description = post.title
+                    }
+                , row [ width fill ]
+                    [ column
+                        [ alignLeft
+                        , spacing 8
+                        ]
+                        [ el [ Font.bold ] <| text post.title
+                        , case post.description of
+                            Just description ->
+                                el [ Font.size 12 ] <| text description
+
+                            Nothing ->
+                                none
+                        ]
+                    , column
+                        [ alignRight
+                        , alignTop
+                        , spacing 8
+                        ]
+                        [ el [ Font.size 12, alignRight ] <| text (Date.toIsoString post.date)
+                        , el [ Font.size 12, alignRight ] <| text <| String.join "," post.tags
+                        ]
+                    ]
+                ]
+        }

@@ -1,5 +1,6 @@
 module Page.Blog.Post_ exposing (Data, Model, Msg, page)
 
+import Data.Post as Post
 import DataSource exposing (DataSource)
 import Element exposing (..)
 import Element.Font as Font
@@ -11,7 +12,7 @@ import Markdown.Block as Block
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Post
+import Path
 import Shared
 import View exposing (View)
 
@@ -57,7 +58,7 @@ head static =
         { canonicalUrlOverride = Nothing
         , siteName = static.data.title
         , image =
-            { url = Pages.Url.external <| static.data.imageUrl ++ "?w=200"
+            { url = Pages.Url.fromPath <| Path.fromString <| static.data.imageUrl
             , alt = static.data.title
             , dimensions = Nothing
             , mimeType = Nothing
@@ -94,7 +95,13 @@ view maybeUrl sharedModel static =
 
                 Nothing ->
                     Element.none
-            , image [ centerX ] { src = static.data.imageUrl ++ "?h=200", description = static.data.title }
+            , image
+                [ centerX
+                , width (fill |> maximum 1200)
+                ]
+                { src = Path.fromString static.data.imageUrl |> Path.toAbsolute
+                , description = static.data.title
+                }
             , case markdown <| String.replace "\u{000D}" "" static.data.content of
                 Ok ( toc, renderedEls ) ->
                     column
