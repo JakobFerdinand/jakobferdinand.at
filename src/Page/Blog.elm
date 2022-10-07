@@ -77,34 +77,35 @@ view maybeUrl sharedModel static =
             , spacing 20
             , padding 30
             ]
-            [ el [ alignTop ] <| text "Blog"
-            , paragraph [ alignTop ] [ text "Most of the stuff are not real blog post. They are links and remindes of projects I found in the internet and I think are worth mentioning." ]
+            [ el [ alignTop, Font.bold ] <| text "Blog"
+            , paragraph [ alignTop ]
+                [ text "Just a colleciton of projects and informations." ]
             , column [ centerX, centerY, spacing 50 ]
-                (static.data
-                    |> List.map
-                        (\post ->
-                            link []
-                                { url = "/blog/" ++ post.slug
-                                , label =
-                                    column [ spacing 8 ]
-                                        [ image
-                                            [ width (fill |> maximum 1200)
-                                            , height (fill |> maximum 200)
-                                            ]
-                                            { src = post.imageUrl
-                                            , description = post.title
-                                            }
-                                        , text post.title
-                                        , case post.description of
-                                            Just description ->
-                                                el [ Font.size 12 ] <| text description
-
-                                            Nothing ->
-                                                Element.none
-                                        ]
-                                }
-                        )
-                )
+                (static.data |> List.map viewBlogPost)
             ]
         ]
     }
+
+
+viewBlogPost : Post -> Element Msg
+viewBlogPost post =
+    link []
+        { url = "/blog/" ++ post.slug
+        , label =
+            column [ spacing 8 ]
+                [ image
+                    [ width (fill |> maximum 1200)
+                    , height (fill |> maximum 200)
+                    ]
+                    { src = post.imageUrl
+                    , description = post.title
+                    }
+                , el [ Font.bold ] <| text post.title
+                , case post.description of
+                    Just description ->
+                        el [ Font.size 12 ] <| text description
+
+                    Nothing ->
+                        none
+                ]
+        }

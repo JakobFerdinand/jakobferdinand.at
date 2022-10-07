@@ -3,7 +3,7 @@
 title: Quad Division
 slug: quad-division
 image-url: images/quad-division.png
-description:
+description: Randomly splitting the screen into a colorful pattern.
 
 ---
 

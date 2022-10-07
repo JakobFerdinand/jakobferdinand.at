@@ -95,7 +95,13 @@ view maybeUrl sharedModel static =
 
                 Nothing ->
                     Element.none
-            , image [ centerX ] { src = (Path.fromString static.data.imageUrl |> Path.toAbsolute), description = static.data.title }
+            , image
+                [ centerX
+                , width (fill |> maximum 1200)
+                ]
+                { src = Path.fromString static.data.imageUrl |> Path.toAbsolute
+                , description = static.data.title
+                }
             , case markdown <| String.replace "\u{000D}" "" static.data.content of
                 Ok ( toc, renderedEls ) ->
                     column
