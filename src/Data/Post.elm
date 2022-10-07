@@ -10,11 +10,11 @@ import Time exposing (Month(..))
 
 
 type alias Post =
-    { date : Date
-    , title : String
+    { title : String
     , imageUrl : String
     , slug : String
     , description : Maybe String
+    , date : Date
     , filePath : String
     }
 
@@ -24,22 +24,13 @@ allPosts =
     let
         blogPosts =
             Glob.succeed
-                (\filePath year month day slug ->
-                    { year = year
-                    , month = toMonth month
-                    , day = day
-                    , filePath = filePath
+                (\filePath slug ->
+                    { filePath = filePath
                     , slug = slug
                     }
                 )
                 |> Glob.captureFilePath
                 |> Glob.match (Glob.literal "content/blog/")
-                |> Glob.capture Glob.int
-                |> Glob.match (Glob.literal "-")
-                |> Glob.capture Glob.int
-                |> Glob.match (Glob.literal "-")
-                |> Glob.capture Glob.int
-                |> Glob.match (Glob.literal "-")
                 |> Glob.capture Glob.wildcard
                 |> Glob.match (Glob.literal ".md")
                 |> Glob.toDataSource
@@ -49,13 +40,7 @@ allPosts =
             (List.map
                 (\post ->
                     File.onlyFrontmatter
-                        (postFrontmatterDecoder
-                            { year = post.year
-                            , month = post.month
-                            , day = post.day
-                            , filePath = post.filePath
-                            }
-                        )
+                        (postFrontmatterDecoder post.filePath)
                         post.filePath
                 )
             )
@@ -108,21 +93,32 @@ toMonth month =
             Dec
 
 
-postFrontmatterDecoder :
-    { year : Int
-    , month : Month
-    , day : Int
-    , filePath : String
-    }
-    -> Decoder Post
-postFrontmatterDecoder post =
-    Decode.map6 Post
-        (Decode.succeed (Date.fromCalendarDate post.year post.month post.day))
-        (Decode.field "title" Decode.string)
-        (Decode.field "image-url" Decode.string)
-        (Decode.field "slug" Decode.string)
-        (Decode.field "description" (Decode.maybe Decode.string))
-        (Decode.succeed post.filePath)
+postFrontmatterDecoder : String -> Decoder Post
+postFrontmatterDecoder filePath =
+    Decode.succeed Post
+        |> Decode.andMap (Decode.field "title" Decode.string)
+        |> Decode.andMap (Decode.field "image-url" Decode.string)
+        |> Decode.andMap (Decode.field "slug" Decode.string)
+        |> Decode.andMap (Decode.field "description" (Decode.maybe Decode.string))
+        |> Decode.andMap (Decode.field "date" dateDecoder)
+        |> Decode.andMap (Decode.succeed filePath)
+
+
+dateDecoder : Decoder Date
+dateDecoder =
+    let
+        create : Int -> Month -> Int -> { year : Int, month : Month, day : Int }
+        create year month day =
+            { year = year
+            , month = month
+            , day = day
+            }
+    in
+    Decode.succeed create
+        |> Decode.andMap (Decode.field "year" Decode.int)
+        |> Decode.andMap (Decode.field "month" Decode.int |> Decode.map toMonth)
+        |> Decode.andMap (Decode.field "day" Decode.int)
+        |> Decode.map (\date -> Date.fromCalendarDate date.year date.month date.day)
 
 
 type alias PostDetails =

@@ -4,6 +4,10 @@ title: Quad Division
 slug: quad-division
 image-url: images/quad-division.png
 description: Randomly splitting the screen into a colorful pattern.
+date:
+    year: 2021
+    month: 10
+    day: 10
 
 ---
 
