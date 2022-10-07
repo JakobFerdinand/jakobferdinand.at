@@ -10,6 +10,7 @@ import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
+import Path
 import Shared
 import View exposing (View)
 
@@ -98,7 +99,7 @@ viewBlogPost post =
                     [ width (fill |> maximum 1200)
                     , height (fill |> maximum 200)
                     ]
-                    { src = post.imageUrl
+                    { src = Path.fromString post.imageUrl |> Path.toAbsolute
                     , description = post.title
                     }
                 , row [ width fill ]
