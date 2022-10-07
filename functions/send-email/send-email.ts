@@ -4,6 +4,7 @@ import client from '@sendgrid/mail';
 const {
   SENDGRID_API_KEY,
   TO_EMAIL,
+  FROM_EMAIL
 } = process.env;
 
 export const handler: Handler = async (event, context) => {
@@ -23,6 +24,14 @@ export const handler: Handler = async (event, context) => {
       })
     };
   }
+  if (!FROM_EMAIL) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'FROM_EMAIL not provided.'
+      })
+    };
+  }
   if (!event.body) {
     return {
       statusCode: 400,
@@ -37,7 +46,7 @@ export const handler: Handler = async (event, context) => {
   
   const data = {
     to: TO_EMAIL,
-    from: fromEmail,
+    from: FROM_EMAIL,
     subject: `New message from ${name} (${fromEmail})`,
     html: message
   };

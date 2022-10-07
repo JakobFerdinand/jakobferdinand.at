@@ -1,15 +1,16 @@
 module Page.Contact exposing (Data, Model, Msg, page)
 
+import Api.Email as Email
 import Browser.Navigation
 import Component
 import Data.Image
 import DataSource exposing (DataSource)
 import Element exposing (..)
-import Element.Input as Input
 import Form exposing (Form)
 import Form.View
 import Head
 import Head.Seo as Seo
+import Http
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.Manifest exposing (DisplayMode(..))
 import Pages.PageUrl exposing (PageUrl)
@@ -24,7 +25,8 @@ type alias Model =
 
 type Msg
     = FormChanged (Form.View.Model ModelData)
-    | SendMessage MessageDetails
+    | SendMessage Email.EmailMessage
+    | MessageSent (Result Http.Error ())
 
 
 type alias RouteParams =
@@ -75,7 +77,14 @@ init :
     -> StaticPayload Data RouteParams
     -> ( Model, Cmd Msg )
 init url shared static =
-    ( Form.View.idle
+    ( clearForm
+    , Cmd.none
+    )
+
+
+clearForm : Form.View.Model ModelData
+clearForm =
+    Form.View.idle
         { agreedToTerms = False
         , name = ""
         , email = ""
@@ -87,8 +96,6 @@ init url shared static =
             , message = Nothing
             }
         }
-    , Cmd.none
-    )
 
 
 update :
@@ -105,7 +112,17 @@ update url key shared static msg model =
             ( newData, Cmd.none )
 
         SendMessage message ->
-            ( model, Cmd.none )
+            ( model
+            , Email.send message MessageSent
+            )
+
+        MessageSent result ->
+            case result of
+                Ok _ ->
+                    ( clearForm, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
 
 
 subscriptions :
@@ -163,17 +180,6 @@ type alias ModelData =
     }
 
 
-type Email
-    = Email String
-
-
-type alias MessageDetails =
-    { name : String
-    , email : Email
-    , message : String
-    }
-
-
 nameField : Form ModelData String
 nameField =
     Form.textField
@@ -194,7 +200,7 @@ nameField =
         }
 
 
-emailField : Form ModelData Email
+emailField : Form ModelData Email.Email
 emailField =
     Form.emailField
         { parser = parseEmail
@@ -208,10 +214,10 @@ emailField =
         }
 
 
-parseEmail : String -> Result String Email
+parseEmail : String -> Result String Email.Email
 parseEmail s =
     if String.contains "@" s then
-        Ok <| Email s
+        Ok <| Email.Email s
 
     else
         Err "Invalid email"
@@ -254,11 +260,11 @@ termsCheckbox =
         }
 
 
-form : Form ModelData MessageDetails
+form : Form ModelData Email.EmailMessage
 form =
     Form.succeed
         (\name email message _ ->
-            MessageDetails name email message
+            Email.EmailMessage name email message
         )
         |> Form.append nameField
         |> Form.append emailField
