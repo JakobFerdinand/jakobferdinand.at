@@ -9,6 +9,8 @@ date:
     month: 10
     day: 10
 
+tags: elm
+
 ---
 
 I found that quite simple but fascinating project.

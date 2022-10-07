@@ -9,6 +9,8 @@ date:
     month: 11
     day: 10
 
+tags: elm,elm-ui
+
 ---
 
 I created [that little page](https://adventofcode.jakobferdinand.at/) to participate by the [Advent of Code 2021](https://adventofcode.com/2021).

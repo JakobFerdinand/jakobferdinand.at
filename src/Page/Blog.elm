@@ -102,14 +102,26 @@ viewBlogPost post =
                     , description = post.title
                     }
                 , row [ width fill ]
-                    [ el [ Font.bold ] <| text post.title
-                    , el [ Font.size 12, alignRight ] <| text (Date.toIsoString post.date)
-                    ]
-                , case post.description of
-                    Just description ->
-                        el [ Font.size 12 ] <| text description
+                    [ column
+                        [ alignLeft
+                        , spacing 8
+                        ]
+                        [ el [ Font.bold ] <| text post.title
+                        , case post.description of
+                            Just description ->
+                                el [ Font.size 12 ] <| text description
 
-                    Nothing ->
-                        none
+                            Nothing ->
+                                none
+                        ]
+                    , column
+                        [ alignRight
+                        , alignTop
+                        , spacing 8
+                        ]
+                        [ el [ Font.size 12, alignRight ] <| text (Date.toIsoString post.date)
+                        , el [ Font.size 12, alignRight ] <| text <| String.join "," post.tags
+                        ]
+                    ]
                 ]
         }

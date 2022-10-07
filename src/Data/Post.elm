@@ -11,6 +11,7 @@ import Time exposing (Month(..))
 
 type alias Post =
     { title : String
+    , tags : List String
     , imageUrl : String
     , slug : String
     , description : Maybe String
@@ -97,11 +98,29 @@ postFrontmatterDecoder : String -> Decoder Post
 postFrontmatterDecoder filePath =
     Decode.succeed Post
         |> Decode.andMap (Decode.field "title" Decode.string)
+        |> Decode.andMap tagsDecoder
         |> Decode.andMap (Decode.field "image-url" Decode.string)
         |> Decode.andMap (Decode.field "slug" Decode.string)
-        |> Decode.andMap (Decode.field "description" (Decode.maybe Decode.string))
+        |> Decode.andMap (Decode.maybe (Decode.field "description" Decode.string))
         |> Decode.andMap (Decode.field "date" dateDecoder)
         |> Decode.andMap (Decode.succeed filePath)
+
+
+tagsDecoder : Decoder (List String)
+tagsDecoder =
+    Decode.field "tags" Decode.string
+        |> Decode.maybe
+        |> Decode.map
+            (\tags ->
+                case tags of
+                    Just tagsString ->
+                        tagsString
+                            |> String.split ","
+                            |> List.map String.trim
+
+                    Nothing ->
+                        []
+            )
 
 
 dateDecoder : Decoder Date
