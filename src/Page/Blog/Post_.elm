@@ -1,5 +1,6 @@
 module Page.Blog.Post_ exposing (Data, Model, Msg, page)
 
+import Data.Post as Post
 import DataSource exposing (DataSource)
 import Element exposing (..)
 import Element.Font as Font
@@ -12,7 +13,6 @@ import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path
-import Post
 import Shared
 import View exposing (View)
 

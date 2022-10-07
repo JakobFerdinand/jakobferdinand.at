@@ -1,6 +1,8 @@
 module Page.Blog exposing (Data, Model, Msg, page)
 
+import Data.Post as Post exposing (Post)
 import DataSource exposing (DataSource)
+import Date
 import Element exposing (..)
 import Element.Font as Font
 import Head
@@ -8,7 +10,6 @@ import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
-import Post exposing (Post)
 import Shared
 import View exposing (View)
 
@@ -100,7 +101,10 @@ viewBlogPost post =
                     { src = post.imageUrl
                     , description = post.title
                     }
-                , el [ Font.bold ] <| text post.title
+                , row [ width fill ]
+                    [ el [ Font.bold ] <| text post.title
+                    , el [ Font.size 12, alignRight ] <| text (Date.toIsoString post.date)
+                    ]
                 , case post.description of
                     Just description ->
                         el [ Font.size 12 ] <| text description
