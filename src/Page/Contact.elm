@@ -1,7 +1,11 @@
 module Page.Contact exposing (Data, Model, Msg, page)
 
 import Browser.Navigation
+import Component
+import Data.Image
 import DataSource exposing (DataSource)
+import Element exposing (..)
+import Element.Input as Input
 import Head
 import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -16,11 +20,16 @@ import View exposing (View)
 
 
 type alias Model =
-    ()
+    { name : String
+    , email : String
+    , message : String
+    }
 
 
 type Msg
-    = Never
+    = NameChanged String
+    | EmailChanged String
+    | MessageChanged String
 
 
 type alias RouteParams =
@@ -56,16 +65,11 @@ head :
 head static =
     Seo.summary
         { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
-        , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "elm-pages logo"
-            , dimensions = Nothing
-            , mimeType = Nothing
-            }
-        , description = "TODO"
+        , siteName = "Contact"
+        , image = Data.Image.profile
+        , description = "Contact me"
         , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
+        , title = "Contact" -- metadata.title -- TODO
         }
         |> Seo.website
 
@@ -76,7 +80,12 @@ init :
     -> StaticPayload Data RouteParams
     -> ( Model, Cmd Msg )
 init url shared static =
-    ( (), Cmd.none )
+    ( { name = ""
+      , email = ""
+      , message = ""
+      }
+    , Cmd.none
+    )
 
 
 update :
@@ -89,8 +98,14 @@ update :
     -> ( Model, Cmd Msg )
 update url key shared static msg model =
     case msg of
-        Never ->
-            ( model, Cmd.none )
+        NameChanged name ->
+            ( { model | name = name }, Cmd.none )
+
+        EmailChanged email ->
+            ( { model | email = email }, Cmd.none )
+
+        MessageChanged message ->
+            ( { model | message = message }, Cmd.none )
 
 
 subscriptions :
@@ -110,4 +125,37 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view maybeUrl sharedModel model static =
-    View.placeholder "Contact"
+    { title = "Contact me"
+    , body =
+        [ column
+            [ centerX
+            , height fill
+            , spacing 20
+            , padding 30
+            ]
+            [ Component.heading
+                { title = "Contact"
+                , description = Nothing
+                }
+            , Input.username []
+                { label = Input.labelHidden "Name"
+                , onChange = NameChanged
+                , placeholder = Just (Input.placeholder [] (text "Your name"))
+                , text = model.name
+                }
+            , Input.email []
+                { label = Input.labelHidden "Email"
+                , onChange = EmailChanged
+                , placeholder = Just (Input.placeholder [] (text "Your email"))
+                , text = model.email
+                }
+            , Input.multiline []
+                { label = Input.labelHidden "Message"
+                , onChange = MessageChanged
+                , placeholder = Just (Input.placeholder [] (text "What do you want to tell me? :)"))
+                , text = model.message
+                , spellcheck = True
+                }
+            ]
+        ]
+    }
