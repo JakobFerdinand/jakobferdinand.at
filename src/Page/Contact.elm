@@ -128,10 +128,9 @@ view maybeUrl sharedModel model static =
     { title = "Contact me"
     , body =
         [ column
-            [ centerX
-            , height fill
+            [ height fill
+            , width fill
             , spacing 20
-            , padding 30
             ]
             [ Component.heading
                 { title = "Contact"
@@ -149,7 +148,10 @@ view maybeUrl sharedModel model static =
                 , placeholder = Just (Input.placeholder [] (text "Your email"))
                 , text = model.email
                 }
-            , Input.multiline []
+            , Input.multiline
+                [ height (shrink |> minimum 400)
+                , width (fill |> minimum 400)
+                ]
                 { label = Input.labelHidden "Message"
                 , onChange = MessageChanged
                 , placeholder = Just (Input.placeholder [] (text "What do you want to tell me? :)"))

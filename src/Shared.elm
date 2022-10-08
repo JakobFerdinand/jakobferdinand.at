@@ -116,7 +116,8 @@ update msg model =
 
 subscriptions : Path -> Model -> Sub Msg
 subscriptions _ _ =
-    Browser.Events.onResize (\w h -> WindowSizeChanged <| classifyDevice { height = h, width = w })
+    Browser.Events.onResize
+        (\w h -> WindowSizeChanged <| classifyDevice { height = h, width = w })
 
 
 data : DataSource.DataSource Data
@@ -154,8 +155,7 @@ view sharedData page model toMsg pageView =
                     , height fill
                     , scrollbarY
                     ]
-                    [ column [ width fill, height fill ]
-                        pageView.body
+                    [ content model.device pageView.body
                     , footer
                     ]
                 ]
@@ -166,7 +166,12 @@ view sharedData page model toMsg pageView =
 header : Element msg
 header =
     row
-        [ width fill, alignTop, padding 16, spacing 16 ]
+        [ Region.navigation
+        , width fill
+        , alignTop
+        , padding 16
+        , spacing 16
+        ]
         [ link [ alignLeft ] { url = "/", label = el [ Font.bold, Font.size 36 ] <| text "JFW" }
         , link [ alignRight ] { url = "/blog", label = text "Blog" }
         , link [ alignRight ] { url = "/contact", label = text "Contact" }
@@ -174,10 +179,30 @@ header =
         ]
 
 
+content : Device -> List (Element msg) -> Element msg
+content { class, orientation } page =
+    let
+        contentPadding =
+            case class of
+                Phone ->
+                    padding 30
+
+                _ ->
+                    paddingXY 80 30
+    in
+    column
+        [ width fill
+        , height fill
+        , contentPadding
+        ]
+        page
+
+
 footer : Element msg
 footer =
     column
-        [ alignBottom
+        [ Region.footer
+        , alignBottom
         , width fill
         , spacing 16
         , padding 16

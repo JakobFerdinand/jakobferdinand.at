@@ -84,7 +84,6 @@ view maybeUrl sharedModel static =
         [ column
             [ centerX
             , spacing 20
-            , padding 30
             , alignTop
             ]
             [ el [ centerX, Font.bold ] <| text static.data.title

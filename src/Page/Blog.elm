@@ -73,7 +73,6 @@ view maybeUrl sharedModel static =
             [ centerX
             , height fill
             , spacing 20
-            , padding 30
             ]
             [ Component.heading
                 { title = "Blog"
