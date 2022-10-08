@@ -4,7 +4,6 @@
 export default {
   load: async function (elmLoaded) {
     const app = await elmLoaded;
-    console.log("App loaded", app);
   },
   flags: function () {
     return {
