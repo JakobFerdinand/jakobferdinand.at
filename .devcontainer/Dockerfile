@@ -17,7 +17,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     elm@${ELM_VERSION} \
     elm-test@${ELM_TEST_VERSION} \
     elm-format@${ELM_FORMAT_VERSION} \
-    @sanity/cli@latest \
+    elm-pages \
+    netlify-cli \
     # [Optional] Update UID/GID if needed
     && if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
         groupmod --gid $USER_GID $USERNAME \
