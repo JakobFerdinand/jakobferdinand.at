@@ -6,30 +6,25 @@ import Data.Image
 import DataSource exposing (DataSource)
 import Element exposing (..)
 import Element.Input as Input
+import Form exposing (Form)
+import Form.View
 import Head
 import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
 import Pages.Manifest exposing (DisplayMode(..))
 import Pages.PageUrl exposing (PageUrl)
-import Pages.Url
 import Path
-import Route exposing (Route)
-import Shared exposing (template)
-import Time exposing (Month(..))
+import Shared
 import View exposing (View)
 
 
 type alias Model =
-    { name : String
-    , email : String
-    , message : String
-    }
+    Form.View.Model ModelData
 
 
 type Msg
-    = NameChanged String
-    | EmailChanged String
-    | MessageChanged String
+    = FormChanged (Form.View.Model ModelData)
+    | SendMessage MessageDetails
 
 
 type alias RouteParams =
@@ -80,10 +75,18 @@ init :
     -> StaticPayload Data RouteParams
     -> ( Model, Cmd Msg )
 init url shared static =
-    ( { name = ""
-      , email = ""
-      , message = ""
-      }
+    ( Form.View.idle
+        { agreedToTerms = False
+        , name = ""
+        , email = ""
+        , message = ""
+        , errors =
+            { agreedToTerms = Nothing
+            , name = Nothing
+            , email = Nothing
+            , message = Nothing
+            }
+        }
     , Cmd.none
     )
 
@@ -98,14 +101,11 @@ update :
     -> ( Model, Cmd Msg )
 update url key shared static msg model =
     case msg of
-        NameChanged name ->
-            ( { model | name = name }, Cmd.none )
+        FormChanged newData ->
+            ( newData, Cmd.none )
 
-        EmailChanged email ->
-            ( { model | email = email }, Cmd.none )
-
-        MessageChanged message ->
-            ( { model | message = message }, Cmd.none )
+        SendMessage message ->
+            ( model, Cmd.none )
 
 
 subscriptions :
@@ -133,31 +133,134 @@ view maybeUrl sharedModel model static =
             , spacing 20
             ]
             [ Component.heading
-                { title = "Contact"
+                { title = "Send me a message"
                 , description = Nothing
                 }
-            , Input.username []
-                { label = Input.labelHidden "Name"
-                , onChange = NameChanged
-                , placeholder = Just (Input.placeholder [] (text "Your name"))
-                , text = model.name
+            , Component.layout
+                { onChange = FormChanged
+                , action = "Send message"
+                , loading = "Sending message"
+                , validation = Form.View.ValidateOnSubmit
                 }
-            , Input.email []
-                { label = Input.labelHidden "Email"
-                , onChange = EmailChanged
-                , placeholder = Just (Input.placeholder [] (text "Your email"))
-                , text = model.email
-                }
-            , Input.multiline
-                [ height (shrink |> minimum 400)
-                , width (fill |> minimum 400)
-                ]
-                { label = Input.labelHidden "Message"
-                , onChange = MessageChanged
-                , placeholder = Just (Input.placeholder [] (text "What do you want to tell me? :)"))
-                , text = model.message
-                , spellcheck = True
-                }
+                (Form.map SendMessage form)
+                model
             ]
         ]
     }
+
+
+type alias ModelData =
+    { agreedToTerms : Bool
+    , name : String
+    , email : String
+    , message : String
+    , errors :
+        { agreedToTerms : Maybe String
+        , name : Maybe String
+        , email : Maybe String
+        , message : Maybe String
+        }
+    }
+
+
+type Email
+    = Email String
+
+
+type alias MessageDetails =
+    { name : String
+    , email : Email
+    , message : String
+    }
+
+
+nameField : Form ModelData String
+nameField =
+    Form.textField
+        { parser =
+            \name ->
+                if String.length name < 2 then
+                    Err "The name must have at least 2 characters"
+
+                else
+                    Ok name
+        , value = .name
+        , update = \value values -> { values | name = value }
+        , attributes =
+            { label = "Name"
+            , placeholder = "Your name"
+            }
+        , error = .errors >> .name
+        }
+
+
+emailField : Form ModelData Email
+emailField =
+    Form.emailField
+        { parser = parseEmail
+        , value = .email
+        , update = \value values -> { values | email = value }
+        , attributes =
+            { label = "Email"
+            , placeholder = "your@email.com"
+            }
+        , error = .errors >> .email
+        }
+
+
+parseEmail : String -> Result String Email
+parseEmail s =
+    if String.contains "@" s then
+        Ok <| Email s
+
+    else
+        Err "Invalid email"
+
+
+messageField : Form ModelData String
+messageField =
+    Form.textareaField
+        { parser =
+            \message ->
+                if String.length message < 30 then
+                    Err "The message must have at least 30 characters"
+
+                else
+                    Ok message
+        , value = .message
+        , update = \value values -> { values | message = value }
+        , attributes =
+            { label = "Message"
+            , placeholder = "Enter your message..."
+            }
+        , error = .errors >> .message
+        }
+
+
+termsCheckbox : Form ModelData ()
+termsCheckbox =
+    Form.checkboxField
+        { parser =
+            \value ->
+                if value then
+                    Ok ()
+
+                else
+                    Err "You must accept the terms"
+        , value = .agreedToTerms
+        , update = \value values -> { values | agreedToTerms = value }
+        , attributes = { label = "I agree to terms and conditions" }
+        , error = .errors >> .agreedToTerms
+        }
+
+
+form : Form ModelData MessageDetails
+form =
+    Form.succeed
+        (\name email message _ ->
+            MessageDetails name email message
+        )
+        |> Form.append nameField
+        |> Form.append emailField
+        |> Form.append messageField
+        |> Form.append termsCheckbox
