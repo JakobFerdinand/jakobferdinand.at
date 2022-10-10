@@ -19,6 +19,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     elm-format@${ELM_FORMAT_VERSION} \
     elm-pages \
     netlify-cli \
+    @sendgrid/mail \
     # [Optional] Update UID/GID if needed
     && if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then \
         groupmod --gid $USER_GID $USERNAME \
