@@ -19,8 +19,10 @@ import Shared
 import View exposing (View)
 
 
-type alias Model =
-    Form.View.Model ModelData
+type Model
+    = Composing (Form.View.Model ModelData)
+    | Sending
+    | MessageIsSent (Result Http.Error ())
 
 
 type Msg
@@ -77,7 +79,7 @@ init :
     -> StaticPayload Data RouteParams
     -> ( Model, Cmd Msg )
 init url shared static =
-    ( clearForm
+    ( Composing clearForm
     , Cmd.none
     )
 
@@ -107,22 +109,20 @@ update :
     -> Model
     -> ( Model, Cmd Msg )
 update url key shared static msg model =
-    case msg of
-        FormChanged newData ->
-            ( newData, Cmd.none )
+    case ( model, msg ) of
+        ( Composing _, FormChanged newData ) ->
+            ( Composing newData, Cmd.none )
 
-        SendMessage message ->
-            ( model
+        ( Composing _, SendMessage message ) ->
+            ( Sending
             , Email.send message MessageSent
             )
 
-        MessageSent result ->
-            case result of
-                Ok _ ->
-                    ( clearForm, Cmd.none )
+        ( Sending, MessageSent result ) ->
+            ( MessageIsSent result, Cmd.none )
 
-                Err _ ->
-                    ( model, Cmd.none )
+        ( _, _ ) ->
+            ( model, Cmd.none )
 
 
 subscriptions :
@@ -144,26 +144,56 @@ view :
 view maybeUrl sharedModel model static =
     { title = "Contact me"
     , body =
-        [ column
-            [ height fill
-            , width fill
-            , spacing 20
-            ]
-            [ Component.heading
-                { title = "Send me a message"
-                , description = Nothing
-                }
-            , Component.layout
-                { onChange = FormChanged
-                , action = "Send message"
-                , loading = "Sending message"
-                , validation = Form.View.ValidateOnSubmit
-                }
-                (Form.map SendMessage form)
-                model
-            ]
+        [ case model of
+            Composing m ->
+                viewComposing m
+
+            Sending ->
+                viewSending
+
+            MessageIsSent result ->
+                viewMessageSent result
         ]
     }
+
+
+viewComposing :
+    Form.View.Model ModelData
+    -> Element Msg
+viewComposing model =
+    column
+        [ height fill
+        , width fill
+        , spacing 20
+        ]
+        [ Component.heading
+            { title = "Send me a message"
+            , description = Nothing
+            }
+        , Component.layout
+            { onChange = FormChanged
+            , action = "Send message"
+            , loading = "Sending message"
+            , validation = Form.View.ValidateOnSubmit
+            }
+            (Form.map SendMessage form)
+            model
+        ]
+
+
+viewSending : Element Msg
+viewSending =
+    text "The message is on it´s way."
+
+
+viewMessageSent : Result Http.Error () -> Element Msg
+viewMessageSent result =
+    case result of
+        Ok _ ->
+            text "The mesage was sent."
+
+        Err err ->
+            text "Something went wrong while sending the message."
 
 
 type alias ModelData =
