@@ -8,6 +8,10 @@ const {
 } = process.env;
 
 export const handler: Handler = async (event, context) => {
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, body: "Method Not Allowed" };
+  }
+
   if (!SENDGRID_API_KEY) {
     return {
       statusCode: 400,
@@ -41,7 +45,16 @@ export const handler: Handler = async (event, context) => {
     };
   }
 
-  const { name, fromEmail, message } = JSON.parse(event.body);
+  const { name, fromEmail, message, acceptTerms } = JSON.parse(event.body);
+  if (!acceptTerms) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'Terms not accepted'
+      })
+    };
+  }
+
   client.setApiKey(SENDGRID_API_KEY);
   
   const data = {

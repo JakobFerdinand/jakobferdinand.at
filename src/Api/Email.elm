@@ -9,14 +9,10 @@ send :
     -> (Result Http.Error () -> msg)
     -> Cmd msg
 send message expect =
-    Http.request
-        { method = "GET"
-        , headers = []
-        , url = ".netlify/functions/send-email"
-        , body = Http.jsonBody (encodeEmail message)
+    Http.post
+        { url = ".netlify/functions/send-email"
+        , body = Http.jsonBody <| encodeEmail message
         , expect = Http.expectWhatever expect
-        , timeout = Nothing
-        , tracker = Nothing
         }
 
 
@@ -35,7 +31,13 @@ type alias EmailMessage =
     { name : String
     , fromEmail : Email
     , message : String
+    , acceptTerms : Bool
     }
+
+
+body : EmailMessage -> Http.Body
+body email =
+    Http.jsonBody <| encodeEmail email
 
 
 encodeEmail : EmailMessage -> Value
@@ -44,4 +46,5 @@ encodeEmail message =
         [ ( "name", Encode.string message.name )
         , ( "fromEmail", Encode.string <| toString message.fromEmail )
         , ( "message", Encode.string message.message )
+        , ( "acceptTerms", Encode.bool message.acceptTerms )
         ]

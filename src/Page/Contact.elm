@@ -243,13 +243,13 @@ messageField =
         }
 
 
-termsCheckbox : Form ModelData ()
+termsCheckbox : Form ModelData Bool
 termsCheckbox =
     Form.checkboxField
         { parser =
             \value ->
                 if value then
-                    Ok ()
+                    Ok value
 
                 else
                     Err "You must accept the terms"
@@ -263,8 +263,8 @@ termsCheckbox =
 form : Form ModelData Email.EmailMessage
 form =
     Form.succeed
-        (\name email message _ ->
-            Email.EmailMessage name email message
+        (\name email message termsAccepted ->
+            Email.EmailMessage name email message termsAccepted
         )
         |> Form.append nameField
         |> Form.append emailField
