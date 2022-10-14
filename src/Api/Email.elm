@@ -31,7 +31,6 @@ type alias EmailMessage =
     { name : String
     , fromEmail : Email
     , message : String
-    , acceptTerms : Bool
     }
 
 
@@ -46,5 +45,4 @@ encodeEmail message =
         [ ( "name", Encode.string message.name )
         , ( "fromEmail", Encode.string <| toString message.fromEmail )
         , ( "message", Encode.string message.message )
-        , ( "acceptTerms", Encode.bool message.acceptTerms )
         ]

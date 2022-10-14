@@ -45,18 +45,10 @@ export const handler: Handler = async (event, context) => {
     };
   }
 
-  const { name, fromEmail, message, acceptTerms } = JSON.parse(event.body);
-  if (!acceptTerms) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: 'Terms not accepted'
-      })
-    };
-  }
+  const { name, fromEmail, message } = JSON.parse(event.body);
 
   client.setApiKey(SENDGRID_API_KEY);
-  
+
   const data = {
     to: TO_EMAIL,
     from: FROM_EMAIL,
