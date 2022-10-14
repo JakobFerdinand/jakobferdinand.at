@@ -87,13 +87,11 @@ init url shared static =
 clearForm : Form.View.Model ModelData
 clearForm =
     Form.View.idle
-        { agreedToTerms = False
-        , name = ""
+        { name = ""
         , email = ""
         , message = ""
         , errors =
-            { agreedToTerms = Nothing
-            , name = Nothing
+            { name = Nothing
             , email = Nothing
             , message = Nothing
             }
@@ -197,13 +195,11 @@ viewMessageSent result =
 
 
 type alias ModelData =
-    { agreedToTerms : Bool
-    , name : String
+    { name : String
     , email : String
     , message : String
     , errors :
-        { agreedToTerms : Maybe String
-        , name : Maybe String
+        { name : Maybe String
         , email : Maybe String
         , message : Maybe String
         }
@@ -273,30 +269,13 @@ messageField =
         }
 
 
-termsCheckbox : Form ModelData Bool
-termsCheckbox =
-    Form.checkboxField
-        { parser =
-            \value ->
-                if value then
-                    Ok value
-
-                else
-                    Err "You must accept the terms"
-        , value = .agreedToTerms
-        , update = \value values -> { values | agreedToTerms = value }
-        , attributes = { label = "I agree to terms and conditions" }
-        , error = .errors >> .agreedToTerms
-        }
-
 
 form : Form ModelData Email.EmailMessage
 form =
     Form.succeed
-        (\name email message termsAccepted ->
-            Email.EmailMessage name email message termsAccepted
+        (\name email message ->
+            Email.EmailMessage name email message 
         )
         |> Form.append nameField
         |> Form.append emailField
         |> Form.append messageField
-        |> Form.append termsCheckbox
