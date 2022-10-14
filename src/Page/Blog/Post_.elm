@@ -4,7 +4,6 @@ import Data.Post as Post
 import DataSource exposing (DataSource)
 import Element exposing (..)
 import Element.Font as Font
-import Element.Region exposing (heading)
 import Head
 import Head.Seo as Seo
 import Markdown exposing (TableOfContent, markdown)
@@ -85,7 +84,6 @@ view maybeUrl sharedModel static =
         [ column
             [ centerX
             , spacing 20
-            , padding 30
             , alignTop
             ]
             [ el [ centerX, Font.bold ] <| text static.data.title

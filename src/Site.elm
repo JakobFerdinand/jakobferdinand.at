@@ -1,6 +1,7 @@
 module Site exposing (config)
 
 import DataSource
+import Date exposing (Language)
 import Head
 import Pages.Manifest as Manifest
 import Route
@@ -14,7 +15,7 @@ type alias Data =
 config : SiteConfig Data
 config =
     { data = data
-    , canonicalUrl = "https://elm-pages.com"
+    , canonicalUrl = "https://jakobferdinand.at"
     , manifest = manifest
     , head = head
     }

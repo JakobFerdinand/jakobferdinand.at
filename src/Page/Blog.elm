@@ -1,10 +1,13 @@
 module Page.Blog exposing (Data, Model, Msg, page)
 
+import Component
+import Data.Image
 import Data.Post as Post exposing (Post)
 import DataSource exposing (DataSource)
 import Date
 import Element exposing (..)
 import Element.Font as Font
+import Element.Region exposing (description)
 import Head
 import Head.Seo as Seo
 import Page exposing (Page, PageWithState, StaticPayload)
@@ -52,12 +55,7 @@ head static =
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = "Blog"
-        , image =
-            { url = Pages.Url.external "https://avatars1.githubusercontent.com/u/16666458?s=460&v=4"
-            , alt = "Me hanging down the 'Himmelsleiter' on the Donnerkogel ferrata."
-            , dimensions = Nothing
-            , mimeType = Nothing
-            }
+        , image = Data.Image.profile
         , description = "Blog and Notes"
         , locale = Nothing
         , title = "Blog" -- metadata.title -- TODO
@@ -77,11 +75,11 @@ view maybeUrl sharedModel static =
             [ centerX
             , height fill
             , spacing 20
-            , padding 30
             ]
-            [ el [ alignTop, Font.bold ] <| text "Blog"
-            , paragraph [ alignTop ]
-                [ text "Just a colleciton of projects and informations." ]
+            [ Component.heading
+                { title = "Blog"
+                , description = Just "Just a colleciton of projects and informations."
+                }
             , column [ centerX, centerY, spacing 50 ]
                 (static.data |> List.map viewBlogPost)
             ]
