@@ -16,6 +16,7 @@ type alias Post =
     , slug : String
     , description : Maybe String
     , date : Date
+    , publishDate : Maybe Date
     , filePath : String
     }
 
@@ -103,6 +104,7 @@ postFrontmatterDecoder filePath =
         |> Decode.andMap (Decode.field "slug" Decode.string)
         |> Decode.andMap (Decode.maybe (Decode.field "description" Decode.string))
         |> Decode.andMap (Decode.field "date" dateDecoder)
+        |> Decode.andMap (Decode.maybe (Decode.field "publish-on" dateDecoder))
         |> Decode.andMap (Decode.succeed filePath)
 
 
