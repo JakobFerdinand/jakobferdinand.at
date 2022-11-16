@@ -89,10 +89,10 @@ view maybeUrl sharedModel static =
 
 viewBlogPost : Post -> Element Msg
 viewBlogPost post =
-    link []
+    link [ width fill ]
         { url = "/blog/" ++ post.slug
         , label =
-            column [ spacing 8 ]
+            column [ spacing 8, width fill ]
                 [ image
                     [ width (fill |> maximum 1200)
                     , height (fill |> maximum 200)
