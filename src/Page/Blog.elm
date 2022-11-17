@@ -145,12 +145,11 @@ isBlogPostPublished today post =
             True
 
         Just d ->
-            Debug.log "diff"
-                (Date.diff Days
-                    d
-                    today
-                )
-                >= 0
+            (Date.diff Days
+                d
+                today
+            )
+            >= 0
 
 
 viewBlogPost : Post -> Element Msg
