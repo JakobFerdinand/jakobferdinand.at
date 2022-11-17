@@ -140,7 +140,7 @@ view maybeUrl sharedModel model static =
 
 isBlogPostPublished : Date -> Post -> Bool
 isBlogPostPublished today post =
-    case Debug.log post.title post.publishDate of
+    case post.publishDate of
         Nothing ->
             True
 
