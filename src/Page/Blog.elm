@@ -1,42 +1,49 @@
 module Page.Blog exposing (Data, Model, Msg, page)
 
+import Browser.Navigation
 import Component
 import Data.Image
 import Data.Post as Post exposing (Post)
 import DataSource exposing (DataSource)
-import Date
+import Date exposing (Date, Unit(..))
 import Element exposing (..)
 import Element.Font as Font
 import Element.Region exposing (description)
 import Head
 import Head.Seo as Seo
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (PageWithState, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
-import Pages.Url
 import Path
+import Platform exposing (Task)
 import Shared
+import Task
 import View exposing (View)
 
 
 type alias Model =
-    ()
+    Maybe Date
 
 
-type alias Msg =
-    Never
+type Msg
+    = SetDate (Maybe Date)
 
 
 type alias RouteParams =
     {}
 
 
-page : Page RouteParams Data
+page : PageWithState RouteParams Data Model Msg
 page =
     Page.single
         { head = head
         , data = data
         }
-        |> Page.buildNoState { view = view }
+        |> Page.buildWithLocalState
+            { init = init
+            , subscriptions = subscriptions
+            , update = update
+            , view = view
+            }
 
 
 type alias Data =
@@ -63,12 +70,48 @@ head static =
         |> Seo.website
 
 
-view :
+init :
     Maybe PageUrl
     -> Shared.Model
     -> StaticPayload Data RouteParams
+    -> ( Model, Cmd Msg )
+init url shared static =
+    ( Nothing
+    , Task.perform (Just >> SetDate) Date.today
+    )
+
+
+update :
+    PageUrl
+    -> Maybe Browser.Navigation.Key
+    -> Shared.Model
+    -> StaticPayload Data RouteParams
+    -> Msg
+    -> Model
+    -> ( Model, Cmd Msg )
+update url key shared static msg model =
+    case msg of
+        SetDate date ->
+            ( date, Cmd.none )
+
+
+subscriptions :
+    Maybe PageUrl
+    -> RouteParams
+    -> Path.Path
+    -> Model
+    -> Sub Msg
+subscriptions url params path model =
+    Sub.none
+
+
+view :
+    Maybe PageUrl
+    -> Shared.Model
+    -> Model
+    -> StaticPayload Data RouteParams
     -> View Msg
-view maybeUrl sharedModel static =
+view maybeUrl sharedModel model static =
     { title = "Jakob Ferdinands Blog"
     , body =
         [ column
@@ -80,19 +123,41 @@ view maybeUrl sharedModel static =
                 { title = "Blog"
                 , description = Just "Just a colleciton of projects and informations."
                 }
-            , column [ centerX, centerY, spacing 50 ]
-                (static.data |> List.map viewBlogPost)
+            , case model of
+                Just date ->
+                    column [ centerX, centerY, spacing 50 ]
+                        (static.data
+                            |> List.filter (isBlogPostPublished date)
+                            |> List.map viewBlogPost
+                        )
+
+                Nothing ->
+                    el [ centerX, centerY ] <| text "loading current date"
             ]
         ]
     }
 
 
+isBlogPostPublished : Date -> Post -> Bool
+isBlogPostPublished today post =
+    case post.publishDate of
+        Nothing ->
+            True
+
+        Just d ->
+            (Date.diff Days
+                d
+                today
+            )
+            >= 0
+
+
 viewBlogPost : Post -> Element Msg
 viewBlogPost post =
-    link []
+    link [ width fill ]
         { url = "/blog/" ++ post.slug
         , label =
-            column [ spacing 8 ]
+            column [ spacing 8, width fill ]
                 [ image
                     [ width (fill |> maximum 1200)
                     , height (fill |> maximum 200)
