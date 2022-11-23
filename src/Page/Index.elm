@@ -59,7 +59,7 @@ head static =
             }
         , description = "The personal homepage of Jakob Ferdinand Wegenschimmel"
         , locale = Nothing
-        , title = "Jakob Ferdinand Wegenschimmel" -- metadata.title -- TODO
+        , title = "Personal Homepage of Jakob Ferdinand Wegenschimmel" -- metadata.title -- TODO
         }
         |> Seo.website
 

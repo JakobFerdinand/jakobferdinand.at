@@ -14,6 +14,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && sudo -u ${USERNAME} npm install --global \
     elm@${ELM_VERSION} \
     elm-test@latest \
+    elm-review@latest \
+    elm-optimize-level-2@latest \
     elm-format@latest \
     elm-pages \
     netlify-cli \
