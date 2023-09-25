@@ -57,6 +57,8 @@ export const handler: Handler = async (event, context) => {
   };
 
   try {
+    console.log("send email");
+    console.log(data);
     await client.send(data);
     return {
       statusCode: 200,
