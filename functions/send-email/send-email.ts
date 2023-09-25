@@ -63,6 +63,7 @@ export const handler: Handler = async (event, context) => {
       body: 'Message sent'
     };
   } catch (err) {
+    console.log(err);
     return {
       statusCode: err.code,
       body: JSON.stringify({ errorMessage: err.message })
