@@ -57,12 +57,15 @@ export const handler: Handler = async (event, context) => {
   };
 
   try {
+    console.log("send email");
+    console.log(data);
     await client.send(data);
     return {
       statusCode: 200,
       body: 'Message sent'
     };
   } catch (err) {
+    console.log(err);
     return {
       statusCode: err.code,
       body: JSON.stringify({ errorMessage: err.message })
