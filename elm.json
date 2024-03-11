@@ -18,7 +18,7 @@
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
             "hecrj/composable-form": "8.0.1",
-            "justinmimbs/date": "4.0.1",
+            "justinmimbs/date": "4.1.0",
             "mdgriffith/elm-ui": "1.1.8"
         },
         "indirect": {
