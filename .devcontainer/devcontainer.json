@@ -1,30 +1,43 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/elm
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
-	"name": "Elm (Community)",
-	"dockerFile": "Dockerfile",
+	"name": "Ubuntu",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": {},
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers-contrib/features/elm-asdf:2": {},
+		"ghcr.io/devcontainers/features/node:1": {}
+	},
 
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"Elmtooling.elm-ls-vscode",
-		"github.vscode-github-actions",
-		"GitHub.copilot"
-	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Elmtooling.elm-ls-vscode",
+				"github.vscode-github-actions",
+				"GitHub.copilot"
+			],
+			"settings": {
+				"[elm]": {
+					"editor.formatOnSave": true
+				}
+			}
+		}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// 8000 is the default port used for the `elm reactor` command
-	// "forwardPorts": [8000],
+	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "elm make",
+	"postCreateCommand": "npm install",
 
-	// Comment out to connect as root instead. In that case you may need to change the mounts
-	// configuration too. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "node",
-	
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+
 	// Keeping the elm dependency cache mounted in a volume is both a small performance benefit
 	// when having rebuilt your container. It also solves a problem with the Elm Language Server.
 	// The Elm Language Server uses the dependency cache stored at ~/.elm.
@@ -40,10 +53,5 @@
 	// Adding this volume will preserve the elm cache between rebuilds though, fixing this issue
 	"mounts": [
 		"source=vscode-devcontainer-elm-dependency-cache,target=/home/node/.elm,type=volume"
-	],
-	
-	"appPort": [
-		1234,
-		3333
 	]
 }
