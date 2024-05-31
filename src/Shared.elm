@@ -174,7 +174,6 @@ header =
         ]
         [ link [ alignLeft ] { url = "/", label = el [ Font.bold, Font.size 36 ] <| text "JFW" }
         , link [ alignRight ] { url = "/blog", label = text "Blog" }
-        , link [ alignRight ] { url = "/contact", label = text "Contact" }
         , newTabLink [ alignRight ] { url = "https://github.com/JakobFerdinand", label = text "Github" }
         ]
 
