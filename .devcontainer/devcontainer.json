@@ -9,7 +9,9 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"Elmtooling.elm-ls-vscode"
+		"Elmtooling.elm-ls-vscode",
+		"github.vscode-github-actions",
+		"GitHub.copilot"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
