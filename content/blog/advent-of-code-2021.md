@@ -2,7 +2,7 @@
 
 title: "Advent of Code 2021"
 slug: advent-of-code-2021
-image-url: images/advent-of-code.png
+image-url: /images/advent-of-code.png
 description: "50 coding puzzles to Christmas"
 date: 
     year: 2021

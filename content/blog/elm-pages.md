@@ -2,7 +2,7 @@
 
 title: elm-pages
 slug: elm-pages
-image-url: images/elm-pages.png
+image-url: /images/elm-pages.png
 description: Static websites in elm
 date:
     year: 2021

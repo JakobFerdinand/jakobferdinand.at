@@ -1,27 +1,29 @@
-module Page.Blog exposing (Data, Model, Msg, page)
+module Route.Blog exposing (Model, Msg, RouteParams, route, Data, ActionData)
 
-import Browser.Navigation
+{-|
+
+@docs Model, Msg, RouteParams, route, Data, ActionData
+
+-}
+
+import BackendTask
 import Component
 import Data.Image
-import Data.Post as Post exposing (Post)
-import DataSource exposing (DataSource)
+import Data.Post exposing (Post)
 import Date exposing (Date, Unit(..))
+import Effect exposing (Effect)
 import Element exposing (..)
 import Element.Font as Font
-import Element.Region exposing (description)
+import ErrorPage exposing (update)
+import FatalError
 import Head
 import Head.Seo as Seo
-import Page exposing (PageWithState, StaticPayload)
-import Pages.PageUrl exposing (PageUrl)
-import Path
-import Platform exposing (Task)
+import PagesMsg
+import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import Task
-import View exposing (View)
-
-
-type alias Model =
-    Maybe Date
+import UrlPath
+import View
 
 
 type Msg
@@ -32,17 +34,21 @@ type alias RouteParams =
     {}
 
 
-page : PageWithState RouteParams Data Model Msg
-page =
-    Page.single
-        { head = head
-        , data = data
+type alias Model =
+    Maybe Date
+
+
+route : StatefulRoute RouteParams Data ActionData Model Msg
+route =
+    RouteBuilder.single
+        { data = data
+        , head = head
         }
-        |> Page.buildWithLocalState
-            { init = init
-            , subscriptions = subscriptions
+        |> RouteBuilder.buildWithLocalState
+            { view = view
             , update = update
-            , view = view
+            , init = init
+            , subscriptions = subscriptions
             }
 
 
@@ -50,15 +56,37 @@ type alias Data =
     List Post
 
 
-data : DataSource Data
+type alias ActionData =
+    {}
+
+
+init :
+    App Data ActionData RouteParams
+    -> Shared.Model
+    -> ( Model, Effect Msg )
+init app shared =
+    ( Nothing
+    , Effect.fromCmd <| Task.perform (Just >> SetDate) Date.today
+    )
+
+
+subscriptions :
+    RouteParams
+    -> UrlPath.UrlPath
+    -> Shared.Model
+    -> Model
+    -> Sub Msg
+subscriptions routeParams path shared model =
+    Sub.none
+
+
+data : BackendTask.BackendTask FatalError.FatalError Data
 data =
-    Post.allPosts
+    Data.Post.allPosts
 
 
-head :
-    StaticPayload Data RouteParams
-    -> List Head.Tag
-head static =
+head : RouteBuilder.App Data ActionData RouteParams -> List Head.Tag
+head app =
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = "Blog"
@@ -70,48 +98,24 @@ head static =
         |> Seo.website
 
 
-init :
-    Maybe PageUrl
-    -> Shared.Model
-    -> StaticPayload Data RouteParams
-    -> ( Model, Cmd Msg )
-init url shared static =
-    ( Nothing
-    , Task.perform (Just >> SetDate) Date.today
-    )
-
-
 update :
-    PageUrl
-    -> Maybe Browser.Navigation.Key
+    App Data ActionData RouteParams
     -> Shared.Model
-    -> StaticPayload Data RouteParams
     -> Msg
     -> Model
-    -> ( Model, Cmd Msg )
-update url key shared static msg model =
+    -> ( Model, Effect.Effect msg )
+update app shared msg model =
     case msg of
         SetDate date ->
-            ( date, Cmd.none )
-
-
-subscriptions :
-    Maybe PageUrl
-    -> RouteParams
-    -> Path.Path
-    -> Model
-    -> Sub Msg
-subscriptions url params path model =
-    Sub.none
+            ( date, Effect.none )
 
 
 view :
-    Maybe PageUrl
+    App Data ActionData RouteParams
     -> Shared.Model
     -> Model
-    -> StaticPayload Data RouteParams
-    -> View Msg
-view maybeUrl sharedModel model static =
+    -> View.View (PagesMsg.PagesMsg Msg)
+view app shared model =
     { title = "Jakob Ferdinands Blog"
     , body =
         [ column
@@ -126,7 +130,7 @@ view maybeUrl sharedModel model static =
             , case model of
                 Just date ->
                     column [ centerX, centerY, spacing 50 ]
-                        (static.data
+                        (app.data
                             |> List.filter (isBlogPostPublished date)
                             |> List.map viewBlogPost
                         )
@@ -145,14 +149,13 @@ isBlogPostPublished today post =
             True
 
         Just d ->
-            (Date.diff Days
+            Date.diff Days
                 d
                 today
-            )
-            >= 0
+                >= 0
 
 
-viewBlogPost : Post -> Element Msg
+viewBlogPost : Post -> Element msg
 viewBlogPost post =
     link [ width fill ]
         { url = "/blog/" ++ post.slug
@@ -162,7 +165,7 @@ viewBlogPost post =
                     [ width (fill |> maximum 1200)
                     , height (fill |> maximum 200)
                     ]
-                    { src = Path.fromString post.imageUrl |> Path.toAbsolute
+                    { src = post.imageUrl
                     , description = post.title
                     }
                 , row [ width fill ]

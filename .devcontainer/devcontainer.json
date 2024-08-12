@@ -3,6 +3,7 @@
 	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 	"features": {
 		// "ghcr.io/devcontainers-contrib/features/elm-asdf:2": {}, -> https://github.com/devcontainers-contrib/features/issues/631
+		"ghcr.io/joshuanianji/devcontainer-features/lamdera:1": {},
 		"ghcr.io/devcontainers/features/node:1": {}
 	},
 
