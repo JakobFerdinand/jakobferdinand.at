@@ -9,7 +9,6 @@ module Route.Blog exposing (Model, Msg, RouteParams, route, Data, ActionData)
 import BackendTask
 import Component
 import Data.Image
-import Data.Post exposing (Post)
 import Date exposing (Date, Unit(..))
 import Effect exposing (Effect)
 import Element exposing (..)
@@ -19,6 +18,7 @@ import FatalError
 import Head
 import Head.Seo as Seo
 import PagesMsg
+import Post exposing (Post)
 import RouteBuilder exposing (App, StatefulRoute)
 import Shared
 import Task
@@ -82,7 +82,7 @@ subscriptions routeParams path shared model =
 
 data : BackendTask.BackendTask FatalError.FatalError Data
 data =
-    Data.Post.allPosts
+    Post.allPosts
 
 
 head : RouteBuilder.App Data ActionData RouteParams -> List Head.Tag

@@ -1,4 +1,4 @@
-module Data.Post exposing (Post, PostDetails, allPosts, allPostsGlob, postDetails)
+module Post exposing (Post, PostDetails, allPosts, allPostsGlob, postDetails)
 
 import BackendTask
 import BackendTask.File as File

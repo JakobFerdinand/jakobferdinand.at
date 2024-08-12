@@ -1,7 +1,6 @@
 module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import Data.Post
 import Element exposing (..)
 import Element.Font as Font
 import FatalError exposing (FatalError)
@@ -10,6 +9,7 @@ import Head.Seo as Seo
 import Markdown exposing (TableOfContent, markdown)
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
+import Post
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import View exposing (View)
@@ -39,7 +39,7 @@ route =
 
 pages : BackendTask FatalError (List RouteParams)
 pages =
-    Data.Post.allPostsGlob
+    Post.allPostsGlob
         |> BackendTask.map
             (List.map
                 (\globData ->
@@ -50,7 +50,7 @@ pages =
 
 
 type alias Data =
-    Data.Post.PostDetails
+    Post.PostDetails
 
 
 type alias ActionData =
@@ -59,7 +59,7 @@ type alias ActionData =
 
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
-    Data.Post.postDetails routeParams.slug
+    Post.postDetails routeParams.slug
 
 
 head :
