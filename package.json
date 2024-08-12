@@ -1,19 +1,21 @@
 {
   "name": "elm-pages-app",
+  "type": "module",
   "scripts": {
     "postinstall": "elm-tooling install",
     "start": "elm-pages dev",
     "build": "elm-pages build"
   },
   "devDependencies": {
-    "elm-json": "^0.2.13",
+    "elm-codegen": "^0.5.3",
     "elm-optimize-level-2": "^0.3.5",
-    "elm-pages": "2.1.11",
+    "elm-pages": "^3.0.14",
     "elm-review": "^2.12.0",
-    "elm-tooling": "^1.15.1"
+    "elm-tooling": "^1.15.1",
+    "lamdera": "^0.19.1-1.2.1-1",
+    "vite": "^5.3.3"
   },
   "dependencies": {
-    "@types/node": "^22.1.0",
-    "typescript": "<4.8"
+    "@netlify/functions": "^2.4.1"
   }
 }

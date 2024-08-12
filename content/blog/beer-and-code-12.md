@@ -2,7 +2,7 @@
 
 title: Beer + Code #12
 slug: beer-and-code-12
-image-url: images/beer-and-code-12.png
+image-url: /images/beer-and-code-12.png
 description: Elm talk at a local community Meetup
 date:
     year: 2022
