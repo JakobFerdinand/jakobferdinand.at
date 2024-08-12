@@ -9,7 +9,7 @@
     "elm-json": "^0.2.13",
     "elm-optimize-level-2": "^0.3.5",
     "elm-pages": "2.1.11",
-    "elm-review": "^2.11.2",
+    "elm-review": "^2.12.0",
     "elm-tooling": "^1.15.1"
   },
   "dependencies": {
