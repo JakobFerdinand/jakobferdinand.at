@@ -21,7 +21,7 @@ jobs:
           lfs: false
 
       - name: npm install
-        run: npm install --no-optional
+        run: npm install
 
       - name: install elm
         run: |
@@ -29,6 +29,11 @@ jobs:
           gunzip elm.gz
           chmod +x elm
           mv elm /usr/local/bin/
+
+      - name: install lamdera
+        run: |
+          curl https://static.lamdera.com/bin/lamdera-1.2.1-linux-x86_64 -o /usr/local/bin/lamdera
+          chmod a+x /usr/local/bin/lamdera
 
       - name: npm run build
         run: npm run build
