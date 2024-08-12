@@ -17,6 +17,7 @@ import ErrorPage exposing (update)
 import FatalError
 import Head
 import Head.Seo as Seo
+import Html.Attributes exposing (align)
 import PagesMsg
 import Post exposing (Post)
 import RouteBuilder exposing (App, StatefulRoute)
@@ -132,7 +133,7 @@ view app shared model =
                     column [ centerX, centerY, spacing 50 ]
                         (app.data
                             |> List.filter (isBlogPostPublished date)
-                            |> List.map viewBlogPost
+                            |> List.map (viewBlogPost shared)
                         )
 
                 Nothing ->
@@ -155,19 +156,38 @@ isBlogPostPublished today post =
                 >= 0
 
 
-viewBlogPost : Post -> Element msg
-viewBlogPost post =
+viewBlogPost : Shared.Model -> Post -> Element msg
+viewBlogPost shared post =
+    let
+        maxWidth =
+            maximum <|
+                case shared.device.class of
+                    Phone ->
+                        280
+
+                    _ ->
+                        1200
+    in
     link [ width fill ]
         { url = "/blog/" ++ post.slug
         , label =
-            column [ spacing 8, width fill ]
+            column [ spacing 8, width (fill |> maxWidth) ]
                 [ image
-                    [ width (fill |> maximum 1200)
+                    [ width fill
                     , height (fill |> maximum 200)
                     ]
                     { src = post.imageUrl
                     , description = post.title
                     }
+                , case shared.device.class of
+                    Phone ->
+                        row [ Font.size 12, width fill ]
+                            [ el [ alignLeft ] <| text <| String.join "," (List.take 3 post.tags)
+                            , el [ alignRight ] <| text (Date.toIsoString post.date)
+                            ]
+
+                    _ ->
+                        none
                 , row [ width fill ]
                     [ column
                         [ alignLeft
@@ -176,19 +196,24 @@ viewBlogPost post =
                         [ el [ Font.bold ] <| text post.title
                         , case post.description of
                             Just description ->
-                                el [ Font.size 12 ] <| text description
+                                paragraph [ Font.size 12 ] [ text description ]
 
                             Nothing ->
                                 none
                         ]
-                    , column
-                        [ alignRight
-                        , alignTop
-                        , spacing 8
-                        ]
-                        [ el [ Font.size 12, alignRight ] <| text (Date.toIsoString post.date)
-                        , el [ Font.size 12, alignRight ] <| text <| String.join "," post.tags
-                        ]
+                    , case shared.device.class of
+                        Phone ->
+                            none
+
+                        _ ->
+                            column
+                                [ alignRight
+                                , alignTop
+                                , spacing 8
+                                ]
+                                [ el [ Font.size 12, alignRight ] <| text (Date.toIsoString post.date)
+                                , el [ Font.size 12, alignRight ] <| text <| String.join "," post.tags
+                                ]
                     ]
                 ]
         }
