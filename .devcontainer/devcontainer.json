@@ -2,31 +2,17 @@
 	"name": "Ubuntu",
 	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 	"features": {
-		// "ghcr.io/devcontainers-contrib/features/elm-asdf:2": {}, -> https://github.com/devcontainers-contrib/features/issues/631
-		"ghcr.io/joshuanianji/devcontainer-features/lamdera:1": {},
 		"ghcr.io/devcontainers/features/node:1": {}
 	},
 
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"Elmtooling.elm-ls-vscode",
 				"github.vscode-github-actions",
 				"GitHub.copilot",
 				"ms-azuretools.vscode-azurestaticwebapps",
 				"ms-azuretools.vscode-azurefunctions"
-			],
-			"settings": {
-				"[elm]": {
-					"editor.formatOnSave": true
-				}
-			}
+			]
 		}
-	},
-
-	"postCreateCommand": "curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz && gunzip elm.gz && chmod +x elm && sudo mv elm /usr/local/bin/ && npm install",
-
-	"mounts": [
-		"source=vscode-devcontainer-elm-dependency-cache,target=/home/node/.elm,type=volume"
-	]
+	}
 }
