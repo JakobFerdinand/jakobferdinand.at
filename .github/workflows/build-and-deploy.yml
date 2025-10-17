@@ -20,20 +20,8 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: npm install
+      - name: Install dependencies
         run: npm install
-
-      - name: install elm
-        run: |
-          curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz
-          gunzip elm.gz
-          chmod +x elm
-          mv elm /usr/local/bin/
-
-      - name: install lamdera
-        run: |
-          curl https://static.lamdera.com/bin/lamdera-1.2.1-linux-x86_64 -o /usr/local/bin/lamdera
-          chmod a+x /usr/local/bin/lamdera
 
       - name: npm run build
         run: npm run build
@@ -47,9 +35,9 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "dist/" # App source code path
+          app_location: "/" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "" # Built app content directory - optional
+          output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:

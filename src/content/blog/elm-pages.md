@@ -1,16 +1,12 @@
 ---
-
 title: elm-pages
 slug: elm-pages
-image-url: /images/elm-pages.png
+imageUrl: /images/elm-pages.png
 description: Static websites in elm
-date:
-    year: 2021
-    month: 12
-    day: 15
-    
-tags: elm,elm-pages
-
+date: 2021-12-15
+tags:
+  - elm
+  - elm-pages
 ---
 
 # elm-pages

@@ -1,13 +1,9 @@
 [build]
-  functions = "functions/"
   publish = "dist/"
-  command = "export ELM_HOME=\"$NETLIFY_BUILD_BASE/cache/elm\" && npm install && npm run build"
+  command = "npm install && npm run build"
 
 [dev]
-  command = "npm start"
-  targetPort = 1234
+  command = "npm run dev"
+  targetPort = 4321
   autoLaunch = true
   framework = "#custom"
-
-[functions]
-  node_bundler = "esbuild"

@@ -1,0 +1,49 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { getCollection } from "astro:content";
+
+const entries = await getCollection("blog");
+const today = new Date();
+const posts = entries
+  .filter((entry) => !entry.data.publishOn || entry.data.publishOn <= today)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const title = "Jakob Ferdinands Blog";
+const description = "Blog and Notes";
+
+const formatDate = (date: Date) => date.toISOString().split("T")[0];
+---
+<MainLayout {title} {description}>
+  <div class="blog-page">
+    <div class="blog-heading">
+      <h1>Blog</h1>
+      <p>Just a colleciton of projects and informations.</p>
+    </div>
+    <div class="post-list">
+      {posts.map((post) => {
+        const tagList = post.data.tags;
+        const mobileTags = tagList.slice(0, 3).join(",");
+        const slug = `/blog/${post.slug}`;
+        return (
+          <a class="post-card" href={slug}>
+            <img src={post.data.imageUrl} alt={post.data.title} loading="lazy" />
+            <div class="post-meta-mobile">
+              <span>{mobileTags}</span>
+              <span>{formatDate(post.data.date)}</span>
+            </div>
+            <div class="post-row">
+              <div class="post-summary">
+                <h2>{post.data.title}</h2>
+                {post.data.description && <p>{post.data.description}</p>}
+              </div>
+              <div class="post-meta-desktop">
+                <span>{formatDate(post.data.date)}</span>
+                <span>{tagList.join(",")}</span>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</MainLayout>

@@ -1,0 +1,22 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const title = "Jakob Ferdinand Wegenschimmel";
+const description = "The personal homepage of Jakob Ferdinand Wegenschimmel";
+---
+<MainLayout {title} {description}>
+  <div class="home-wrapper">
+    <section class="home">
+      <img
+        class="portrait"
+        src="https://avatars1.githubusercontent.com/u/16666458?s=460&v=4"
+        alt="Me hanging down the 'Himmelsleiter' on the Donnerkogel ferrata."
+      />
+      <h2>Welcome!</h2>
+      <div class="intro-text">
+        <p>Hello, my name is Jakob Ferdinand Wegenschimmel.</p>
+        <p>I´m a software developer living in Austria.</p>
+      </div>
+    </section>
+  </div>
+</MainLayout>
