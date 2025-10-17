@@ -1,6 +1,14 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
-import { getEntryBySlug } from "astro:content";
+import { getCollection, getEntryBySlug } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("blog");
+
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+  }));
+}
 
 const { slug } = Astro.params;
 
