@@ -39,5 +39,10 @@ updates:
       timezone: "Europe/Vienna"
     groups:
       npm-all:
+        applies-to: version-updates
+        patterns:
+          - "*"
+      npm-security-all:
+        applies-to: security-updates
         patterns:
           - "*"
