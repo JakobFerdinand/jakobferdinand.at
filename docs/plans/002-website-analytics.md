@@ -221,15 +221,15 @@ New German-language page, styled like `index.html` (same header/nav/footer,
 
 Checkboxes are updated as work progresses.
 
-- [ ] Decide final storage account name (`stjakobferdinand`) and retention (36 months)
-- [ ] Add `storage.bicep` module + `main.bicep` wiring; validate with `az bicep build` + `az deployment group what-if` (expect only `Create`)
-- [ ] Extend `infra-deploy.yml` deploy job to set the `StorageConnection` app setting
-- [ ] Scaffold `api/` (csproj, Program.cs, pageview feature, requests.http); verify `dotnet publish`
-- [ ] Add beacon script to `index.html`; create `staticwebapp.config.json` (`apiRuntime`)
-- [ ] Update `build-and-deploy.yml` (dotnet publish + `api_location`)
-- [ ] Create `datenschutz.html` (German, pseudonymous statistics section) and link it
-- [ ] Ignore API build artifacts; add nuget dependabot updates
-- [ ] Update `AGENTS.md` (new `api/` dir, app setting note)
+- [x] Decide final storage account name (`stjakobferdinand`) and retention (36 months)
+- [x] Add `storage.bicep` module + `main.bicep` wiring; validate with `az bicep build` + `az deployment group what-if` (expect only `Create`)
+- [x] Extend `infra-deploy.yml` deploy job to set the `StorageConnection` app setting
+- [x] Scaffold `api/` (csproj, Program.cs, pageview feature, requests.http); verify `dotnet publish`
+- [x] Add beacon script to `index.html`; create `staticwebapp.config.json` (`apiRuntime`)
+- [x] Update `build-and-deploy.yml` (dotnet publish + `api_location`)
+- [x] Create `datenschutz.html` (German, pseudonymous statistics section) and link it
+- [x] Ignore API build artifacts; add nuget dependabot updates
+- [x] Update `AGENTS.md` (new `api/` dir, app setting note)
 - [ ] Merge; deploy infrastructure; verify storage account exists
 - [ ] Deploy app; verify: beacon fires, 204 returned, rows appear in the
       `pageviews` table (`az storage table query`)
