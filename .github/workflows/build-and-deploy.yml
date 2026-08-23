@@ -20,6 +20,15 @@ jobs:
           submodules: true
           lfs: false
 
+      - uses: actions/setup-dotnet@v4
+        if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Publish API
+        if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+        run: dotnet publish api/jakobferdinand-api.csproj -o dist-api
+
       - name: Build And Deploy
         if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
         id: builddeploy
@@ -31,7 +40,8 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "public" # App source code path
-          api_location: "" # Api source code path - optional
+          api_location: "dist-api" # Prebuilt API output - published above
+          skip_api_build: true # API is built by the dotnet publish step above
           output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 

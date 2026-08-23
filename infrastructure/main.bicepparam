@@ -2,6 +2,7 @@ using './main.bicep'
 
 param staticSiteName = 'jakobferdinand'
 param location = 'westeurope'
+param storageAccountName = 'stjakobferdinand'
 param customDomains = [
   'jakobferdinand.at'
 ]
