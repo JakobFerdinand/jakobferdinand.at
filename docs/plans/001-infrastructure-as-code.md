@@ -45,7 +45,7 @@ already configured and validated).
 Checkboxes are updated as work progresses.
 
 - [ ] Create git branch `feat/infrastructure-as-code`
-- [x] Write infrastructure plan (`docs/plans/infrastructure-as-code.md`)
+- [x] Write infrastructure plan (`docs/plans/001-infrastructure-as-code.md`)
 - [ ] Scaffold Bicep templates (`main.bicep`, optional `main-subscription.bicep`, modules, `*.bicepparam`, `bicepconfig.json`)
 - [ ] Validate templates locally (`az bicep build` + `az deployment group what-if`)
 - [ ] Write `.github/workflows/infra-deploy.yml` (what-if PR job + deploy on main)
