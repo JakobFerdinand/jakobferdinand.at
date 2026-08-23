@@ -1,3 +1,12 @@
+dist-api/
+
+# .NET build output
+bin/
+obj/
+*.user
+
+# Azure Functions local settings (may contain secrets)
+api/local.settings.json
 .DS_Store
 Thumbs.db
 *.swp
