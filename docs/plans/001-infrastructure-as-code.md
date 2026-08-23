@@ -46,12 +46,12 @@ Checkboxes are updated as work progresses.
 
 - [ ] Create git branch `feat/infrastructure-as-code`
 - [x] Write infrastructure plan (`docs/plans/001-infrastructure-as-code.md`)
-- [ ] Scaffold Bicep templates (`main.bicep`, optional `main-subscription.bicep`, modules, `*.bicepparam`, `bicepconfig.json`)
+- [ ] Scaffold Bicep templates (`main.bicep`, modules, `*.bicepparam`, `bicepconfig.json`)
 - [ ] Validate templates locally (`az bicep build` + `az deployment group what-if`)
 - [ ] Write `.github/workflows/infra-deploy.yml` (what-if PR job + deploy on main)
 - [ ] Manual: create service principal + OIDC federated credential scoped to RG-jakobferdinand, add GitHub secrets (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`)
 - [ ] First deploy: review what-if → apply → verify site stays live and the custom domain remains intact
-- [ ] Optional: create subscription cost budget via `main-subscription.bicep`
+- [ ] Create resource-group cost budget via `modules/budget.bicep`
 - [ ] Update README (and add an AGENTS.md section) documenting the deployment commands
 - [ ] Open pull request and merge to main
 
@@ -60,13 +60,11 @@ Checkboxes are updated as work progresses.
 ```
 infrastructure/
   main.bicep              # RG-scoped orchestrator (targetScope = resourceGroup)
-  main.bicepparam         # values: SWA name, location, custom domains
-  main-subscription.bicep # subscription-scoped deployment (optional cost budget)
-  main-subscription.bicepparam
+  main.bicepparam         # values: SWA name, location, custom domains, budget
   bicepconfig.json        # lint rules
   modules/
     static-sites.bicep    # SWA + custom domain (adopt in place)
-    budget.bicep          # subscription cost budget + action group (new resource)
+    budget.bicep          # resource-group cost budget + action group (new resource)
 ```
 
 Details:
@@ -78,10 +76,13 @@ Details:
   observability modules — those resources do not exist in this estate.
 - There are no app settings to manage, so no Key Vault and no
   `seed-keyvault.sh` / `sync-swappsettings.sh` scripts are needed.
-- The subscription-scoped budget template mirrors the diermairat pattern
-  (`Jakobferdinand-Budget`, monthly grain, notifications at 20/80/100% via an
-  action group). This creates a **new** budget — none exists today — and can
-  be deferred or dropped if not wanted.
+- The budget is **resource-group scoped** (`Microsoft.Consumption/budgets`
+  deployed by `az deployment group create`), not subscription-scoped like
+  diermairat's: every resource of this estate lives in RG-jakobferdinand, and
+  it keeps the deploy identity's Contributor-on-RG grant sufficient. It
+  mirrors the RG-scoped Alpakasoelde budget pattern (`Jakobferdinand-Budget`,
+  monthly grain, notifications at 20/80/100% via an action group). This
+  creates a **new** budget — none exists today.
 
 ## 2. Secret management
 
@@ -98,26 +99,24 @@ New workflow `.github/workflows/infra-deploy.yml`:
 - Triggers: push to `main` with paths `infrastructure/**` (plus the workflow
   file itself), and `pull_request` for a what-if preview job; both also support
   `workflow_dispatch`.
-- Env: `RESOURCE_GROUP=RG-jakobferdinand`, `DEPLOYMENT_LOCATION=westeurope`.
+- Env: `RESOURCE_GROUP=RG-jakobferdinand`.
 
 Deploy identity (one-time setup):
 
 - Create a service principal for this repo.
 - Add an OIDC federated credential for `JakobFerdinand/jakobferdinand.at`.
-- Grant Contributor on `RG-jakobferdinand` only (least privilege; add
-  subscription scope only if the budget module is adopted).
+- Grant Contributor on `RG-jakobferdinand` only (least privilege; sufficient
+  because the budget is resource-group scoped).
 - Store `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` in repo
   secrets (separate from the other repos' ones).
 
 Jobs:
 
 - **what-if** (pull requests): `azure/login@v2` (OIDC) → `az bicep build` →
-  `az deployment group what-if` (+ subscription what-if if budget adopted) →
-  post the diff as a PR comment (marker-based upsert), so infra PRs show their
-  impact before merge.
+  `az deployment group what-if` → post the diff as a PR comment (marker-based
+  upsert), so infra PRs show their impact before merge.
 - **deploy** (main): `azure/login@v2` → `az bicep build` → what-if guard that
-  fails on any `Delete`/`Replace` change → `az deployment group create`;
-  optionally `az deployment sub create` for the budget.
+  fails on any `Delete`/`Replace` change → `az deployment group create`.
 
 ## 4. Rollout order (safe, no downtime)
 
@@ -130,10 +129,10 @@ Jobs:
    Static Web App and its custom domain (the adoption hotspot).
 3. Commit the templates plus `infra-deploy.yml`; open a PR and check the
    posted what-if comment.
-4. Merge; verify the deploy job succeeds and the site stays live at
-   https://jakobferdinand.at with the custom domain still resolving.
-5. Optionally deploy the subscription budget.
-6. Update README with an "Infrastructure" section pointing at
+4. Merge; verify the deploy job succeeds, the site stays live at
+   https://jakobferdinand.at with the custom domain still resolving, and the
+   budget + action group appear in RG-jakobferdinand.
+5. Update README with an "Infrastructure" section pointing at
    `infrastructure/` and the workflow behaviour.
 
 ## 5. Known limitations (kept manual, documented)
@@ -145,8 +144,9 @@ Jobs:
 
 ## Decisions
 
-- Bicep with a single RG-scoped `main.bicep`; subscription-scoped
-  `main-subscription.bicep` reserved for the optional cost budget.
+- Bicep with a single RG-scoped `main.bicep`; no subscription-scoped template.
+  The cost budget is resource-group scoped, so one deployment and one
+  Contributor-on-RG identity cover the whole estate.
 - Adopt existing resources in place; no recreation, no downtime.
 - No Key Vault: the estate has no secrets today.
 - Existing app build-and-deploy workflow stays untouched; infra changes deploy
