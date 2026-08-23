@@ -11,6 +11,8 @@ namespace JakobFerdinand.Api.Features.Pageviews;
 
 public class PageView(PageView.Handler handler)
 {
+	private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+
 	[Function("pageview")]
 	public async Task<HttpResponseData> Run(
 		[HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData request,
@@ -19,7 +21,7 @@ public class PageView(PageView.Handler handler)
 		Payload? payload;
 		try
 		{
-			payload = await JsonSerializer.DeserializeAsync<Payload>(request.Body, cancellationToken: cancellationToken);
+			payload = await JsonSerializer.DeserializeAsync<Payload>(request.Body, JsonOptions, cancellationToken);
 		}
 		catch (JsonException)
 		{
