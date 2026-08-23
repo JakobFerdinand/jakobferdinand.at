@@ -230,8 +230,8 @@ Checkboxes are updated as work progresses.
 - [x] Create `datenschutz.html` (German, pseudonymous statistics section) and link it
 - [x] Ignore API build artifacts; add nuget dependabot updates
 - [x] Update `AGENTS.md` (new `api/` dir, app setting note)
-- [ ] Merge; deploy infrastructure; verify storage account exists
-- [ ] Deploy app; verify: beacon fires, 204 returned, rows appear in the
+- [x] Merge; deploy infrastructure; verify storage account exists
+- [x] Deploy app; verify: beacon fires, 204 returned, rows appear in the
       `pageviews` table (`az storage table query`)
 
 ## Verification checklist
