@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Datenschutzerklärung von jakobferdinand.at" />
+    <meta name="robots" content="noindex" />
+    <title>Datenschutzerklärung – Jakob Ferdinand Wegenschimmel</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/source-code-pro-latin-400.woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="/">JFW</a>
+        <nav class="nav-links">
+          <a href="https://github.com/JakobFerdinand" target="_blank" rel="noreferrer noopener">Github</a>
+          <a href="/datenschutz.html">Datenschutz</a>
+        </nav>
+      </header>
+      <main class="site-main">
+        <div class="main-content">
+          <h1>Datenschutzerklärung</h1>
+
+          <h2>Verantwortlicher</h2>
+          <p>
+            Jakob Ferdinand Wegenschimmel<br />
+            E-Mail: <a href="mailto:j.wegenschimmel@gmail.com">j.wegenschimmel@gmail.com</a>
+          </p>
+
+          <h2>Keine Cookies &amp; kein Local Storage</h2>
+          <p>
+            Diese Website verwendet keine Cookies und keinen Local Storage. Es findet kein Tracking
+            durch Drittanbieter-Tools statt.
+          </p>
+
+          <h2>Pseudonyme Besuchsstatistik</h2>
+          <p>
+            Beim Aufruf dieser Website wird eine pseudonyme Besuchsstatistik erfasst.
+            Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der
+            Auswertung und Verbesserung dieses Webangebots).
+          </p>
+          <p>
+            Erfasst werden ausschließlich der aufgerufene Seitenpfad, die Herkunfts-Domain des
+            Referrers (nur die Domain, niemals die vollständige URL) sowie die Bildschirmbreite des
+            verwendeten Geräts.
+          </p>
+          <p>
+            Es werden keine Cookies, keine IP-Adressen, keine Nutzer-IDs und kein User-Agent
+            gespeichert. Eine Identifizierung einzelner Besucher ist nicht möglich.
+          </p>
+          <p>
+            Die Daten werden in Azure Table Storage in der EU (Region Westeuropa) gespeichert und
+            nach 36 Monaten automatisch gelöscht. Da ausschließlich pseudonyme,
+            einwilligungsfreie Daten verarbeitet werden, ist kein Opt-out erforderlich.
+          </p>
+
+          <h2>Server- und Logdaten</h2>
+          <p>
+            Über die oben beschriebene Besuchsstatistik hinaus werden keine Server-Logs oder
+            sonstigen Zugriffsprotokolle seitens des Website-Betreibers erhoben oder ausgewertet.
+          </p>
+
+          <h2>Hosting</h2>
+          <p>
+            Die Website wird bereitgestellt über Azure Static Web Apps mit Rechenzentren in
+            Westeuropa. Azure verarbeitet technische Verbindungsdaten im Rahmen des Betriebs,
+            jedoch erfolgt hierdurch keine personenbezogene Auswertung oder dauerhafte Speicherung
+            seitens des Website-Betreibers.
+          </p>
+
+          <h2>Weitergabe von Daten</h2>
+          <p>
+            Eine Weitergabe von Daten an Dritte findet nicht statt. Hosting sowie Speicherung der
+            Besuchsstatistik erfolgen bei Microsoft Azure in Westeuropa (siehe oben).
+          </p>
+
+          <h2>Betroffenenrechte</h2>
+          <p>
+            Da auf dieser Website ausschließlich pseudonyme Daten verarbeitet werden, ist keine
+            Identifizierung einzelner Besucher möglich. Unabhängig davon stehen Ihnen grundsätzlich
+            folgende Rechte zu, sollten Sie Ihre Daten von uns einfordern wollen:
+          </p>
+          <ul>
+            <li>Recht auf Auskunft</li>
+            <li>Recht auf Berichtigung</li>
+            <li>Recht auf Löschung</li>
+            <li>Recht auf Einschränkung der Verarbeitung</li>
+            <li>Recht auf Datenübertragbarkeit</li>
+            <li>Widerspruchsrecht</li>
+            <li>Recht auf Beschwerde bei einer Aufsichtsbehörde</li>
+          </ul>
+          <p>
+            Zur Ausübung Ihrer Rechte oder bei Fragen zum Datenschutz kontaktieren Sie bitte den
+            Verantwortlichen (siehe oben).
+          </p>
+
+          <h2>Änderungen dieser Datenschutzerklärung</h2>
+          <p>
+            Diese Datenschutzerklärung ist aktuell gültig und datiert auf den 23. August 2026.
+            Sollten sich an der Datenerhebung, am Hosting oder an den rechtlichen Vorgaben
+            Änderungen ergeben, wird diese Erklärung entsprechend angepasst.
+          </p>
+        </div>
+      </main>
+      <footer class="site-footer"></footer>
+    </div>
+    <script>
+      window.addEventListener('load', () => {
+        if (!('sendBeacon' in navigator)) {
+          return;
+        }
+        let referrerHost = '';
+        try {
+          referrerHost = new URL(document.referrer).host;
+        } catch {
+          referrerHost = '';
+        }
+        const payload = {
+          path: location.pathname,
+          referrerHost,
+          viewportWidth: screen.width,
+        };
+        navigator.sendBeacon(
+          '/api/pageview',
+          new Blob([JSON.stringify(payload)], { type: 'application/json' })
+        );
+      });
+    </script>
+  </body>
+</html>
