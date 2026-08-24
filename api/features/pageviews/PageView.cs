@@ -33,6 +33,11 @@ public class PageView(PageView.Handler handler)
 			return await BadRequestAsync(request, "Invalid JSON payload.");
 		}
 
+		if (!string.IsNullOrWhiteSpace(payload.Path))
+		{
+			payload = payload with { Path = NormalizePath(payload.Path) };
+		}
+
 		var error = handler.Validate(payload);
 		if (error is not null)
 		{
@@ -50,7 +55,13 @@ public class PageView(PageView.Handler handler)
 		return response;
 	}
 
-	public sealed record Payload(string? Path, string? ReferrerHost, int? ViewportWidth);
+	private static string NormalizePath(string? path)
+	{
+		var trimmed = path?.TrimEnd('/') ?? string.Empty;
+		return trimmed.Length == 0 ? "/" : trimmed;
+	}
+
+	public sealed record Payload(string? Path, string? ReferrerHost, int? ViewportWidth, string? SessionId, string? VisitorId, string? NavigationType);
 
 	public sealed class Handler(IPageViewWriteStore store)
 	{
@@ -80,6 +91,21 @@ public class PageView(PageView.Handler handler)
 				return $"Field 'viewportWidth' must be between 0 and {MaxViewportWidth}.";
 			}
 
+			if (payload.SessionId is not null && !Guid.TryParse(payload.SessionId, out _))
+			{
+				return "Field 'sessionId' must be a valid UUID.";
+			}
+
+			if (payload.VisitorId is not null && !Guid.TryParse(payload.VisitorId, out _))
+			{
+				return "Field 'visitorId' must be a valid UUID.";
+			}
+
+			if (payload.NavigationType is not null && payload.NavigationType is not ("navigate" or "reload" or "back_forward"))
+			{
+				return "Field 'navigationType' must be one of 'navigate', 'reload', 'back_forward'.";
+			}
+
 			return null;
 		}
 
@@ -92,6 +118,9 @@ public class PageView(PageView.Handler handler)
 				Path = payload.Path!,
 				ReferrerHost = payload.ReferrerHost,
 				ViewportWidth = payload.ViewportWidth ?? 0,
+				SessionId = Guid.TryParse(payload.SessionId, out var sessionId) ? sessionId.ToString() : null,
+				VisitorId = Guid.TryParse(payload.VisitorId, out var visitorId) ? visitorId.ToString() : null,
+				NavigationType = payload.NavigationType,
 			};
 			await store.SaveAsync(entity, ct);
 		}

@@ -23,3 +23,42 @@ Content-Type: application/json
   "referrerHost": "google.at",
   "viewportWidth": 1920
 }
+
+### Valid pageview with session context (expect 204)
+POST http://localhost:7071/api/pageview
+Content-Type: application/json
+
+{
+  "path": "/datenschutz.html/",
+  "referrerHost": "google.at",
+  "viewportWidth": 1920,
+  "sessionId": "0f8fad5b-d9cb-469f-a165-70867728950e",
+  "visitorId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "navigationType": "navigate"
+}
+
+### Invalid navigation type (expect 400)
+POST http://localhost:7071/api/pageview
+Content-Type: application/json
+
+{
+  "path": "/datenschutz.html/",
+  "referrerHost": "google.at",
+  "viewportWidth": 1920,
+  "sessionId": "0f8fad5b-d9cb-469f-a165-70867728950e",
+  "visitorId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "navigationType": "unknown"
+}
+
+### Invalid visitor id (expect 400)
+POST http://localhost:7071/api/pageview
+Content-Type: application/json
+
+{
+  "path": "/datenschutz.html/",
+  "referrerHost": "google.at",
+  "viewportWidth": 1920,
+  "sessionId": "0f8fad5b-d9cb-469f-a165-70867728950e",
+  "visitorId": "not-a-uuid",
+  "navigationType": "navigate"
+}
