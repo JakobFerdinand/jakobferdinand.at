@@ -59,27 +59,6 @@
         <a href="/datenschutz.html">Datenschutz</a>
       </footer>
     </div>
-    <script>
-      window.addEventListener('load', () => {
-        if (!('sendBeacon' in navigator)) {
-          return;
-        }
-        let referrerHost = '';
-        try {
-          referrerHost = new URL(document.referrer).host;
-        } catch {
-          referrerHost = '';
-        }
-        const payload = {
-          path: location.pathname,
-          referrerHost,
-          viewportWidth: screen.width,
-        };
-        navigator.sendBeacon(
-          '/api/pageview',
-          new Blob([JSON.stringify(payload)], { type: 'application/json' })
-        );
-      });
-    </script>
+    <script src="/analytics.js" defer></script>
   </body>
 </html>

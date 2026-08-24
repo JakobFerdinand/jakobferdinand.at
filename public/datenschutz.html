@@ -38,10 +38,15 @@
             E-Mail: <a href="mailto:j.wegenschimmel@gmail.com">j.wegenschimmel@gmail.com</a>
           </p>
 
-          <h2>Keine Cookies &amp; kein Local Storage</h2>
+          <h2>Lokale Speicherung &amp; keine Cookies</h2>
           <p>
-            Diese Website verwendet keine Cookies und keinen Local Storage. Es findet kein Tracking
-            durch Drittanbieter-Tools statt.
+            Diese Website verwendet keine Cookies und kein Drittanbieter-Tracking. Für die
+            pseudonyme Besuchsstatistik werden zwei zufällig erzeugte Kennungen ausschließlich
+            lokal im Browser gespeichert: eine Besucher-Kennung (lt-visitor, Local Storage,
+            dauerhaft bis zur Löschung) und eine Sitzungs-Kennung (lt-session, Session Storage,
+            nur für die Dauer der Browser-Sitzung). Diese Kennungen verlassen das Gerät
+            ausschließlich im Rahmen der unten beschriebenen Statistik und lassen keinen
+            Rückschluss auf Ihre Person zu.
           </p>
 
           <h2>Pseudonyme Besuchsstatistik</h2>
@@ -52,17 +57,24 @@
           </p>
           <p>
             Erfasst werden ausschließlich der aufgerufene Seitenpfad, die Herkunfts-Domain des
-            Referrers (nur die Domain, niemals die vollständige URL) sowie die Bildschirmbreite des
-            verwendeten Geräts.
+            Referrers (nur die Domain, niemals die vollständige URL), die Bildschirmbreite des
+            verwendeten Geräts, die zufällige Besucher- und Sitzungs-Kennung sowie die Art des
+            Seitenaufrufs (normaler Aufruf, Neuladen oder Rückkehr über den Browserverlauf). Die
+            Kennungen dienen allein dem Zählen von Sitzungen und wiederholten Aufrufen desselben
+            Browsers.
           </p>
           <p>
-            Es werden keine Cookies, keine IP-Adressen, keine Nutzer-IDs und kein User-Agent
-            gespeichert. Eine Identifizierung einzelner Besucher ist nicht möglich.
+            Es werden keine Cookies, keine IP-Adressen und kein User-Agent gespeichert. Die beiden
+            Kennungen sind zufällige UUIDs, die auf Ihrem Gerät erzeugt werden und in keiner Weise
+            mit Ihrer Identität verknüpft sind. Ein Wiedererkennen desselben Browsers über Besuche
+            hinweg ist möglich; eine Identifizierung natürlicher Personen bleibt ausgeschlossen.
           </p>
           <p>
             Die Daten werden in Azure Table Storage in der EU (Region Westeuropa) gespeichert und
-            nach 36 Monaten automatisch gelöscht. Da ausschließlich pseudonyme,
-            einwilligungsfreie Daten verarbeitet werden, ist kein Opt-out erforderlich.
+            nach 36 Monaten automatisch gelöscht. Sie können beide Kennungen jederzeit über die
+            Einstellungen Ihres Browsers löschen; beim nächsten Besuch wird dann eine neue, nicht
+            verknüpfte Kennung erzeugt. Da ausschließlich pseudonyme, einwilligungsfreie Daten
+            verarbeitet werden, ist kein Opt-out erforderlich.
           </p>
 
           <h2>Server- und Logdaten</h2>
@@ -87,9 +99,10 @@
 
           <h2>Betroffenenrechte</h2>
           <p>
-            Da auf dieser Website ausschließlich pseudonyme Daten verarbeitet werden, ist keine
-            Identifizierung einzelner Besucher möglich. Unabhängig davon stehen Ihnen grundsätzlich
-            folgende Rechte zu, sollten Sie Ihre Daten von uns einfordern wollen:
+            Die verarbeiteten Daten sind pseudonym: Das Wiedererkennen desselben Browsers ist über
+            die lokale Besucher-Kennung möglich, eine Identifizierung einzelner Besucher jedoch
+            nicht. Unabhängig davon stehen Ihnen grundsätzlich folgende Rechte zu, sollten Sie Ihre
+            Daten von uns einfordern wollen:
           </p>
           <ul>
             <li>Recht auf Auskunft</li>
@@ -107,7 +120,7 @@
 
           <h2>Änderungen dieser Datenschutzerklärung</h2>
           <p>
-            Diese Datenschutzerklärung ist aktuell gültig und datiert auf den 23. August 2026.
+            Diese Datenschutzerklärung ist aktuell gültig und datiert auf den 24. August 2026.
             Sollten sich an der Datenerhebung, am Hosting oder an den rechtlichen Vorgaben
             Änderungen ergeben, wird diese Erklärung entsprechend angepasst.
           </p>
@@ -117,27 +130,6 @@
         <a href="/datenschutz.html">Datenschutz</a>
       </footer>
     </div>
-    <script>
-      window.addEventListener('load', () => {
-        if (!('sendBeacon' in navigator)) {
-          return;
-        }
-        let referrerHost = '';
-        try {
-          referrerHost = new URL(document.referrer).host;
-        } catch {
-          referrerHost = '';
-        }
-        const payload = {
-          path: location.pathname,
-          referrerHost,
-          viewportWidth: screen.width,
-        };
-        navigator.sendBeacon(
-          '/api/pageview',
-          new Blob([JSON.stringify(payload)], { type: 'application/json' })
-        );
-      });
-    </script>
+    <script src="/analytics.js" defer></script>
   </body>
 </html>
